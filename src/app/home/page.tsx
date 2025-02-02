@@ -143,9 +143,9 @@ export default function Home() {
                 <div>
                     <ul className="mt-10 space-y-3">
                         {posts.map(post => (
-                            <li key={post.id} className="border-b min-w-[300px] p-4">
+                            <li key={post.id} className="text-gray-700 border-b min-w-[300px] p-4">
                                 <div className="flex justify-between items-center mb-2">
-                                    <p>{post.author}</p>
+                                    <p className="text-gray-700"><strong>{post.author}</strong></p>
                                     <p>{post.timestamp}</p>
                                 </div>
                                 <div><p>{post.content}</p></div> 
