@@ -1,12 +1,17 @@
 import { Children } from "react";
+import { ReactNode } from 'react';
 
-export default function BlogLayout({children}) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function BlogLayout({ children }: LayoutProps) {
   return (
     <div className="h-screen flex flex-col ">
       {/* header */}
       <header className="p-3 bg-black text-white text-center text-5xl font-bold border-b lg:hidden ">REFLEXIONES</header>
       <main>
-      {children}
+        {children}
       </main>
     </div>
   );

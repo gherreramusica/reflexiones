@@ -3,12 +3,21 @@ import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react"
 
+// Definir la interfaz para un post
+interface Post {
+    id: number;
+    author: string;
+    content: string;
+    timestamp: string;
+    likes: number;
+    saved: boolean;
+}
+
 export default function Home() {
     const [input, showInput] = useState(false);
-    // Estado para el contenido del textarea
     const [content, setContent] = useState('');
-    // Estado para almacenar los posts
-    const [posts, setPosts] = useState([
+    // Tipar el estado posts
+    const [posts, setPosts] = useState<Post[]>([
         {
             id: 1,
             author: "Martin Herrera",
@@ -19,12 +28,11 @@ export default function Home() {
         }
     ]);
 
-    // Función para crear un nuevo post
     const handleSubmit = () => {
-        if (!content.trim()) return; // No crear posts vacíos
+        if (!content.trim()) return;
 
-        const newPost = {
-            id: Date.now(), // ID único temporal
+        const newPost: Post = {
+            id: Date.now(),
             author: "Martin Herrera",
             content: content,
             timestamp: "hace 1 min",
@@ -32,13 +40,13 @@ export default function Home() {
             saved: false
         };
 
-        setPosts([newPost, ...posts]); // Añadir al inicio del array
-        setContent(''); // Limpiar el textarea
-        showInput(false); // Cerrar el modal
+        setPosts([newPost, ...posts]);
+        setContent('');
+        showInput(false);
     };
 
-    // Función para manejar likes
-    const handleLike = (postId) => {
+    // Tipar el parámetro postId
+    const handleLike = (postId: number) => {
         setPosts(posts.map(post => 
             post.id === postId 
                 ? {...post, likes: post.likes + 1}
@@ -46,8 +54,8 @@ export default function Home() {
         ));
     };
 
-    // Función para manejar guardados
-    const handleSave = (postId) => {
+    // Tipar el parámetro postId
+    const handleSave = (postId: number) => {
         setPosts(posts.map(post => 
             post.id === postId 
                 ? {...post, saved: !post.saved}
