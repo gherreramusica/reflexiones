@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
-
-import Sidebar from "@/components/sidebar/sidebar/page";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Post {
   _id: string; // MongoDB usa `_id`
@@ -48,15 +47,20 @@ export default function Home() {
   };
 
   return (
-    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] min-h-screen max-w-[90%] lg:max-w-[50%] grid justify-center m-auto relative">
+    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[50%] grid justify-center m-auto relative">
+      <div className="mt-10">
+        <ul className="flex gap-3 justify-center">
+          <Link href="/home"><li className="border p-2 rounded-md">Notes</li></Link> 
+          <Link href="/blog"><li className="border p-2 rounded-md">Articles</li></Link> 
+          <li className="border p-2 rounded-md">Saves</li>
+        </ul>
+      </div>
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
           onClick={() => showInput(false)}
         ></div>
       )}
-
-      <Sidebar />
 
       {/* Ventana flotante del textarea */}
       <div className="relative">
@@ -68,7 +72,13 @@ export default function Home() {
         >
           <div className="flex space-x-1 h-[250px]">
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
-              <Image width={40} height={40} src="/images/avatar.jpeg" alt="avatar" className="object-cover rounded-full" />
+              <Image
+                width={40}
+                height={40}
+                src="/images/avatar.jpeg"
+                alt="avatar"
+                className="object-cover rounded-full"
+              />
             </div>
             <div className="w-full">
               <p>Martin Herrera</p>
@@ -79,10 +89,16 @@ export default function Home() {
                 value={content}
               ></textarea>
               <div className="flex p-3 justify-end items-center">
-                <button className="bg-gray-100 p-2 rounded-md" onClick={() => showInput(false)}>
+                <button
+                  className="bg-gray-100 p-2 rounded-md"
+                  onClick={() => showInput(false)}
+                >
                   <strong>Cancelar</strong>
                 </button>
-                <button className="bg-gray-100 p-2 rounded-md" onClick={handleSubmit}>
+                <button
+                  className="bg-gray-100 p-2 rounded-md"
+                  onClick={handleSubmit}
+                >
                   <strong>Publicar</strong>
                 </button>
               </div>
@@ -92,7 +108,10 @@ export default function Home() {
 
         {/* Botón para abrir el textarea */}
         <div className="mt-10">
-          <div className="bg-white p-5 shadow-md cursor-pointer w-[700px] rounded-md" onClick={() => showInput(true)}>
+          <div
+            className="bg-white p-5 shadow-md cursor-pointer w-full rounded-md"
+            onClick={() => showInput(true)}
+          >
             <p>Escribe algo...</p>
           </div>
         </div>
@@ -100,10 +119,15 @@ export default function Home() {
         {/* Lista de posts */}
         <ul className="mt-10 space-y-3">
           {posts.length === 0 ? (
-            <p className="text-gray-500 text-center">No hay publicaciones aún.</p>
+            <p className="text-gray-500 text-center">
+              No hay publicaciones aún.
+            </p>
           ) : (
             posts.map((p) => (
-              <li key={p._id} className="border p-4 bg-white shadow-md rounded-md">
+              <li
+                key={p._id}
+                className="border p-4 bg-white shadow-md rounded-md"
+              >
                 <p className="font-bold">{p.author}</p>
                 <p>{p.timestamp}</p>
                 <p>{p.contenido}</p>

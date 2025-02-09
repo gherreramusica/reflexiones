@@ -8,7 +8,7 @@ export default function BlogLayout({ children }: LayoutProps) {
   return (
     <div className="h-screen flex flex-col ">
       {/* header */}
-      <header className="p-3 bg-black text-white text-center text-5xl font-bold border-b lg:hidden ">REFLEXIONES</header>
+      <header className="p-3 bg-white text-black text-center text-5xl font-bold border-b">REFLEXIONES</header>
       <main>
         {children}
       </main>

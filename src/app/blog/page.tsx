@@ -12,7 +12,7 @@ interface Post {
 
 export default function Blog() {
     const [input, showInput] = useState(false);
-    const [post, setPost] = useState([]);
+    const [post, setPost] = useState<Post[]>([]);
 
     useEffect(() => {
         fetch ("/api/posts")
@@ -22,7 +22,14 @@ export default function Blog() {
 
 
     return (
-        <section  className="bg-[radial-gradient(#000_1px,transparent_1px)] min-h-screen grid justify-center m-auto relative max-w-[90%] lg:max-w-[50%]" >          
+        <section  className="bg-[radial-gradient(#000_1px,transparent_1px)] min-h-screen grid justify-center m-auto relative max-w-[90%] lg:max-w-[50%]" >   
+        <div className="mt-10">
+        <ul className="flex gap-3 justify-center">
+          <Link href="/home"><li className="border p-2 rounded-md">Notes</li></Link> 
+          <Link href="/blog"><li className="border p-2 rounded-md">Articles</li></Link> 
+          <li className="border p-2 rounded-md">Saves</li>
+        </ul>
+      </div>       
             {/* Overlay oscuro cuando el input está activo */}
             {input && (
                 <div 
@@ -30,21 +37,6 @@ export default function Blog() {
                     onClick={() => showInput(false)} // Ocultar el modal al hacer clic en el fondo
                 ></div>
             )}
-            {/* Sidebar */}
-            <aside onClick={() => showInput(false)} className="min-h-screen bg-black text-white w-[200px] border-r fixed top-0 left-0 pt-4 p-2 lg:block hidden">
-                <div className="font-bold text-xl">REFLEXIONES</div>
-                <ul className="space-y-4 pt-20">
-                    <li>
-                        <Link href="/home"><strong>NOTES</strong></Link>             
-                    </li>
-                    <li>
-                        <Link href="/blog"><strong>LONG NOTES</strong></Link>             
-                    </li>
-                    <li>
-                        <Link href="/#"><strong>SAVES</strong></Link>             
-                    </li>
-                </ul>
-            </aside>
 
             {/* Contenido */}
             <div className="relative z-20">  
