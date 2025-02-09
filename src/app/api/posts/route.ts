@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             { message: 'Post saved successfully!', post: newPost },
             { status: 201 }
         );
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in POST:", error);
         return NextResponse.json(
             { error: 'Error saving post', details: error.message },
