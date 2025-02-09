@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
+
 import Sidebar from "@/components/sidebar/sidebar/page";
 import { useState, useEffect } from "react";
 

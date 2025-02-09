@@ -9,6 +9,7 @@ export async function GET() {
     const notes = await Note.find().sort({ createdAt: -1 });
     return NextResponse.json(notes);
   } catch (error) {
+    console.error("❌ Error en GET:", error);
     return NextResponse.json({ error: "Error al obtener notas" }, { status: 500 });
   }
 }
@@ -28,6 +29,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newNote, { status: 201 });
   } catch (error) {
+    console.error("❌ Error en POST:", error);
     return NextResponse.json({ error: "Error al guardar la nota" }, { status: 500 });
   }
 }
