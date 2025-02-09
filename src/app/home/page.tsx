@@ -50,8 +50,12 @@ export default function Home() {
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[50%] grid justify-center m-auto relative">
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
-          <Link href="/home"><li className="border p-2 rounded-md">Notes</li></Link> 
-          <Link href="/blog"><li className="border p-2 rounded-md">Articles</li></Link> 
+          <Link href="/home">
+            <li className="border p-2 rounded-md">Notes</li>
+          </Link>
+          <Link href="/blog">
+            <li className="border p-2 rounded-md">Articles</li>
+          </Link>
           <li className="border p-2 rounded-md">Saves</li>
         </ul>
       </div>

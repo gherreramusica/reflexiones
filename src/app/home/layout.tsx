@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Poppins } from 'next/font/google'
+import Link from 'next/link';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -16,7 +17,7 @@ export default function HomeLayout({ children }: LayoutProps) {
   return (
     <div className={`h-screen flex flex-col ${poppins.variable}`}>
       {/* header */}
-      <header className="p-3 bg-black text-white text-center text-5xl font-bold border-b ">REFLEXIONES</header>
+      <header className="p-3 bg-white text-black text-center text-5xl font-bold border-b"><Link href="/home" >REFLEXIONES</Link> </header>
       <main>
         {children}
       </main>
