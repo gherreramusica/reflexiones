@@ -24,17 +24,25 @@ export async function POST(req: Request) {
             { message: 'Post saved successfully!', post: newPost },
             { status: 201 }
         );
-    } catch (error: any) {
-        console.error("Error in POST:", error);
-        return NextResponse.json(
-            { error: 'Error saving post', details: error.message },
-            { status: 500 }
-        );
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error in POST:", error.message);
+            return NextResponse.json(
+                { error: "Error saving post", details: error.message },
+                { status: 500 }
+            );
+        } else {
+            console.error("Unknown error:", error);
+            return NextResponse.json(
+                { error: "An unknown error occurred" },
+                { status: 500 }
+            );
+        }
     }
 }
 
 // Ruta para obtener todos los posts
-export async function GET(req: Request) {
+export async function GET() {
     try {
         await connectDB();
 
