@@ -20,6 +20,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "lucide-react": "^0.475.0",
     "mongodb": "^6.13.0",
     "mongoose": "^8.9.7",
     "next": "15.1.6",
