@@ -5,13 +5,12 @@ import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 
 interface Post {
-    _id: string;
-    author: string;
-    createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
-    updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
-    contenido: string;
-  }
-  
+  _id: string;
+  author: string;
+  createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
+  updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
+  contenido: string;
+}
 
 export default function Home() {
   const [input, showInput] = useState(false);
@@ -72,7 +71,7 @@ export default function Home() {
       {/* Ventana flotante del textarea */}
       <div className="relative">
         <div
-          className={`lg:w-[600px] w-[300px] border p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
+          className={`lg:w-[600px] min-w-[300px] border p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
             input ? "block" : "hidden"
           } z-[20]`}
           onClick={(e) => e.stopPropagation()}
@@ -115,10 +114,20 @@ export default function Home() {
 
         {/* Botón para abrir el textarea */}
         <div className="mt-10">
+            
           <div
-            className="bg-white text-gray-500 p-5 shadow-lg border cursor-pointer min-w-[330px] rounded-md"
+            className="bg-white flex items-center gap-4 text-gray-500 p-5 shadow-lg border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
           >
+            <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
+              <Image
+                width={40}
+                height={40}
+                src="/images/avatar.jpeg"
+                alt="avatar"
+                className="object-cover rounded-full"
+              />
+            </div>
             <p>Escribe algo...</p>
           </div>
         </div>
@@ -131,20 +140,21 @@ export default function Home() {
             </p>
           ) : (
             posts.map((p) => {
-                 // 🔍 Verifica qué valor tiene
-                return (
-                  <li key={p._id} className="border-b p-4 bg-white">
-                    <p className="font-bold">{p.author}</p>
-                    <p>{new Date(p.createdAt).toLocaleDateString("es-ES")}</p>
-
-                    <p>{p.contenido}</p>
-                    <div className="flex space-x-2 mt-2">
-                      <HandThumbUpIcon className="w-5 h-5" />
-                      <BookmarkIcon className="w-5 h-5" />
-                    </div>
-                  </li>
-                );
-              })
+              // 🔍 Verifica qué valor tiene
+              return (
+                <li key={p._id} className="border-b p-4 bg-white">
+                  <div className="flex justify-between items-center">
+                    <p className=" text-sm text-gray-500">{p.author}</p>
+                    <p className="text-sm text-gray-500">{new Date(p.createdAt).toLocaleDateString("es-ES")}</p>
+                  </div>
+                  <p>{p.contenido}</p>
+                  <div className="flex space-x-2 mt-2">
+                    <HandThumbUpIcon className="w-5 h-5" />
+                    <BookmarkIcon className="w-5 h-5" />
+                  </div>
+                </li>
+              );
+            })
           )}
         </ul>
       </div>

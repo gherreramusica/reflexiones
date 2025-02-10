@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface Post {
   _id: string;
@@ -46,7 +47,7 @@ export default function Blog() {
       <div className="relative z-20">
         {/* Ventana flotante del textarea */}
         <div
-          className={`lg:w-[600px] lg:h-[250px] w-[330px] h-[200px] h-auto border p-4 absolute top-[40%] left-[10%] rounded-md bg-white ${
+          className={`lg:w-[600px] lg:h-[250px] min-w-[330px] h-[200px] h-auto border p-4 absolute top-[40%] left-[10%] rounded-md bg-white ${
             input ? "block" : "hidden"
           }`}
         >
@@ -82,7 +83,16 @@ export default function Blog() {
         {/* Botón para mostrar el textarea */}
         <div className="mt-10">
           <Link href="/editor">
-            <div className="bg-white p-5 shadow-md border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
+            <div className="bg-white flex items-center gap-4 p-5 shadow-md border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
+            <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
+              <Image
+                width={40}
+                height={40}
+                src="/images/avatar.jpeg"
+                alt="avatar"
+                className="object-cover rounded-full"
+              />
+            </div>
               <p>Escribe algo...</p>
             </div>
           </Link>
@@ -94,9 +104,9 @@ export default function Blog() {
             {post.map((post) => (
               <li key={post._id} className="border-b  p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <p>Martin Herrera</p>
+                  <p className="text-sm text-gray-500">Martin Herrera</p>
                   <div>
-                  <p>{new Date(post.createdAt).toLocaleDateString("es-ES")}</p>
+                  <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString("es-ES")}</p>
                 </div>
                 </div>
                 <div className="font-bold text-xl">
