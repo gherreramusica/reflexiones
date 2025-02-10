@@ -131,7 +131,7 @@ export default function Home() {
             </p>
           ) : (
             posts.map((p) => {
-                console.log("Timestamp recibido:", p.timestamp); // 🔍 Verifica qué valor tiene
+                 // 🔍 Verifica qué valor tiene
                 return (
                   <li key={p._id} className="border-b p-4 bg-white">
                     <p className="font-bold">{p.author}</p>
