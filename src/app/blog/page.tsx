@@ -7,6 +7,8 @@ interface Post {
   _id: string;
   title: string;
   content: string;
+  createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
+  updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
 }
 
 export default function Blog() {
@@ -20,16 +22,16 @@ export default function Blog() {
   }, []);
 
   return (
-    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] grid justify-center m-auto relative max-w-[90%] lg:max-w-[50%]">
+    <section className="bg-[radial-gradient(#000_1px,transparent_1px)]  m-auto relative max-w-[90%] lg:max-w-[500px]">
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
-            <li className="border p-2 rounded-md">Notes</li>
+            <li className="border bg-gray-100 p-2 rounded-md">Notes</li>
           </Link>
           <Link href="/blog">
-            <li className="border p-2 rounded-md">Articles</li>
+            <li className="border bg-gray-100 p-2 rounded-md">Articles</li>
           </Link>
-          <li className="border p-2 rounded-md">Saves</li>
+          <li className="border bg-gray-100 p-2 rounded-md">Saves</li>
         </ul>
       </div>
       {/* Overlay oscuro cuando el input está activo */}
@@ -80,7 +82,7 @@ export default function Blog() {
         {/* Botón para mostrar el textarea */}
         <div className="mt-10">
           <Link href="/editor">
-            <div className="border shadow-md cursor-pointer p-5 text-gray-400 rounded-md cursor-pointer">
+            <div className="bg-white p-5 shadow-md border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
               <p>Escribe algo...</p>
             </div>
           </Link>
@@ -93,11 +95,14 @@ export default function Blog() {
               <li key={post._id} className="border-b  p-4">
                 <div className="flex justify-between items-center mb-2">
                   <p>Martin Herrera</p>
-                  <p>hace 1 min</p>
+                  <div>
+                  <p>{new Date(post.createdAt).toLocaleDateString("es-ES")}</p>
+                </div>
                 </div>
                 <div className="font-bold text-xl">
                   <p>{post.title}</p>
                 </div>
+                
                 <div>
                   <p>{post.content}</p>
                 </div>

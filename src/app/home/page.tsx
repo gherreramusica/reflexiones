@@ -2,13 +2,16 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 
 interface Post {
-  _id: string; // MongoDB usa `_id`
-  author: string;
-  timestamp: string;
-  contenido: string;
-}
+    _id: string;
+    author: string;
+    createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
+    updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
+    contenido: string;
+  }
+  
 
 export default function Home() {
   const [input, showInput] = useState(false);
@@ -47,16 +50,16 @@ export default function Home() {
   };
 
   return (
-    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[50%] grid justify-center m-auto relative">
+    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
-            <li className="border p-2 rounded-md">Notes</li>
+            <li className="border bg-gray-100 p-2 rounded-md">Notes</li>
           </Link>
           <Link href="/blog">
-            <li className="border p-2 rounded-md">Articles</li>
+            <li className="border bg-gray-100 p-2 rounded-md">Articles</li>
           </Link>
-          <li className="border p-2 rounded-md">Saves</li>
+          <li className="border bg-gray-100 p-2 rounded-md">Saves</li>
         </ul>
       </div>
       {input && (
@@ -69,12 +72,12 @@ export default function Home() {
       {/* Ventana flotante del textarea */}
       <div className="relative">
         <div
-          className={`lg:w-[600px] w-[330px] border p-4 absolute top-[40%] left-[10%] rounded-md bg-white ${
+          className={`lg:w-[600px] w-[300px] border p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
             input ? "block" : "hidden"
           } z-[20]`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex space-x-1 h-[250px]">
+          <div className="flex gap-3 space-x-1 h-[100%] min-w-[330px]">
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
               <Image
                 width={40}
@@ -87,33 +90,33 @@ export default function Home() {
             <div className="w-full">
               <p>Martin Herrera</p>
               <textarea
-                className="w-full outline-none resize-none overflow-auto break-words h-[100px]"
+                className="w-full outline-none resize-none overflow-auto break-words"
                 placeholder="Escribe aquí..."
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
               ></textarea>
-              <div className="flex p-3 justify-end items-center">
-                <button
-                  className="bg-gray-100 p-2 rounded-md"
-                  onClick={() => showInput(false)}
-                >
-                  <strong>Cancelar</strong>
-                </button>
-                <button
-                  className="bg-gray-100 p-2 rounded-md"
-                  onClick={handleSubmit}
-                >
-                  <strong>Publicar</strong>
-                </button>
-              </div>
             </div>
+          </div>
+          <div className="flex gap-3 p-3 justify-end">
+            <button
+              className="bg-gray-100 p-3 rounded-md"
+              onClick={() => showInput(false)}
+            >
+              <strong>Cancelar</strong>
+            </button>
+            <button
+              className="bg-gray-100 p-3 rounded-md"
+              onClick={handleSubmit}
+            >
+              <strong>Publicar</strong>
+            </button>
           </div>
         </div>
 
         {/* Botón para abrir el textarea */}
         <div className="mt-10">
           <div
-            className="bg-white p-5 shadow-md cursor-pointer w-full rounded-md"
+            className="bg-white text-gray-500 p-5 shadow-lg border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
           >
             <p>Escribe algo...</p>
@@ -127,16 +130,21 @@ export default function Home() {
               No hay publicaciones aún.
             </p>
           ) : (
-            posts.map((p) => (
-              <li
-                key={p._id}
-                className="border p-4 bg-white shadow-md rounded-md"
-              >
-                <p className="font-bold">{p.author}</p>
-                <p>{p.timestamp}</p>
-                <p>{p.contenido}</p>
-              </li>
-            ))
+            posts.map((p) => {
+                console.log("Timestamp recibido:", p.timestamp); // 🔍 Verifica qué valor tiene
+                return (
+                  <li key={p._id} className="border-b p-4 bg-white">
+                    <p className="font-bold">{p.author}</p>
+                    <p>{new Date(p.createdAt).toLocaleDateString("es-ES")}</p>
+
+                    <p>{p.contenido}</p>
+                    <div className="flex space-x-2 mt-2">
+                      <HandThumbUpIcon className="w-5 h-5" />
+                      <BookmarkIcon className="w-5 h-5" />
+                    </div>
+                  </li>
+                );
+              })
           )}
         </ul>
       </div>

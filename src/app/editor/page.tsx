@@ -14,7 +14,7 @@ const TiptapEditor = () => {
   const [title, setTitle] = useState('')
   const editor = useEditor({
     extensions: [StarterKit, Bold, Italic, Underline, BulletList, OrderedList, Link],
-    content: '<p>Start writing...</p>',
+    content: '',
   })
 
   const savePost = async () => {
@@ -22,9 +22,9 @@ const TiptapEditor = () => {
       alert('Title and content are required')
       return
     }
-
-    const content = editor.getHTML()
-
+  
+    const content = editor.getText(); // Obtiene solo el texto sin etiquetas HTML
+  
     try {
       const response = await fetch('/api/posts', {
         method: 'POST',
@@ -32,22 +32,23 @@ const TiptapEditor = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ title, content }),
-      })
-
+      });
+  
       if (response.ok) {
-        alert('Post saved successfully!')
-        setTitle('')
-        editor.commands.setContent('')
+        alert('Post saved successfully!');
+        setTitle('');
+        editor.commands.setContent('');
       } else {
-        const error = await response.json()
-        console.error('Failed to save post:', error)
-        alert('Error saving the post: ' + error.error)
+        const error = await response.json();
+        console.error('Failed to save post:', error);
+        alert('Error saving the post: ' + error.error);
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('Failed to connect to the server.')
+      console.error('Error:', error);
+      alert('Failed to connect to the server.');
     }
   }
+  
 
   if (!editor) {
     return null
@@ -61,7 +62,7 @@ const TiptapEditor = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Enter post title"
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-2 mb-4 border rounded outline-none"
       />
 
       {/* Barra de Herramientas */}
