@@ -83,16 +83,16 @@ export default function Blog() {
         {/* Botón para mostrar el textarea */}
         <div className="mt-10">
           <Link href="/editor">
-            <div className="bg-white flex items-center gap-4 p-5 shadow-md border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
-            <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
-              <Image
-                width={40}
-                height={40}
-                src="/images/avatar.jpeg"
-                alt="avatar"
-                className="object-cover rounded-full"
-              />
-            </div>
+            <div className="bg-white flex items-center gap-4 p-5 border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
+              <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
+                <Image
+                  width={40}
+                  height={40}
+                  src="/images/avatar.jpeg"
+                  alt="avatar"
+                  className="object-cover rounded-full"
+                />
+              </div>
               <p>Escribe algo...</p>
             </div>
           </Link>
@@ -100,22 +100,28 @@ export default function Blog() {
 
         {/* Lista de reflexiones */}
         <div>
+          {/* Lista de reflexiones */}
           <ul className="mt-10 space-y-3">
             {post.map((post) => (
-              <li key={post._id} className="border-b  p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm text-gray-500">Martin Herrera</p>
+              <li key={post._id} className="border-b p-4">
+                {/* Enlace a la página del post */}
+                <Link href={`/post/${post._id}`} className="block">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-sm text-gray-500">Martin Herrera</p>
+                    <div>
+                      <p className="text-sm text-gray-500">
+                        {new Date(post.createdAt).toLocaleDateString("es-ES")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="font-bold text-xl">
+                    <p>{post.title}</p>
+                  </div>
                   <div>
-                  <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString("es-ES")}</p>
-                </div>
-                </div>
-                <div className="font-bold text-xl">
-                  <p>{post.title}</p>
-                </div>
-                
-                <div>
-                  <p>{post.content}</p>
-                </div>
+                    <p>{post.content}</p>
+                  </div>
+                </Link>
+                {/* Íconos fuera del Link para evitar que sean clickeables */}
                 <div className="flex space-x-2 mt-2">
                   <HandThumbUpIcon className="w-5 h-5" />
                   <BookmarkIcon className="w-5 h-5" />

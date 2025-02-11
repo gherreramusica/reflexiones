@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
+import { usePathname } from "next/navigation";
 
 interface Post {
   _id: string;
@@ -16,6 +17,7 @@ export default function Home() {
   const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
+  const pathname = usePathname(); // Obtener la ruta actual
 
   // 📌 Cargar posts desde MongoDB cuando el componente se monta
   useEffect(() => {
@@ -53,12 +55,21 @@ export default function Home() {
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
-            <li className="border bg-gray-100 p-2 rounded-md">Notes</li>
+            <li className={`border bg-gray-100 p-2 rounded-md ${
+            pathname === "/home" ? "bg-blue-500 text-white font-bold" : ""
+          }`}>Notes</li>
           </Link>
           <Link href="/blog">
-            <li className="border bg-gray-100 p-2 rounded-md">Articles</li>
+            <li className={`border bg-gray-100 p-2 rounded-md ${
+            pathname === "/blog" ? "bg-blue-500 text-white font-bold" : ""
+          }`}>Articles</li>
           </Link>
-          <li className="border bg-gray-100 p-2 rounded-md">Saves</li>
+          <Link href="/saves">
+            <li className={`border bg-gray-100 p-2 rounded-md ${
+            pathname === "/saves" ? "bg-blue-500 text-white font-bold" : ""
+          }`}>Articles</li>
+          </Link>
+         
         </ul>
       </div>
       {input && (

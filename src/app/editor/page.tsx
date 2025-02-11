@@ -11,26 +11,34 @@ import Link from "@tiptap/extension-link";
 import { ArrowLeft } from "lucide-react"; // Importar icono de back
 import { useState } from "react";
 import { Bold as BoldIcon, Italic as ItalicIcon, Underline as UnderlineIcon, List, ListOrdered, Link as LinkIcon } from "lucide-react"; // Importar iconos
+import Placeholder from "@tiptap/extension-placeholder"; // Importar extensión
+
+
 
 const TiptapEditor = () => {
   const [title, setTitle] = useState("");
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit, // NO eliminamos paragraph para evitar errores
       Bold,
       Italic,
       Underline,
       BulletList,
       OrderedList,
       Link,
+      Placeholder.configure({
+        placeholder: "Escribe tu reflexión aquí...",
+        showOnlyWhenEditable: true,
+      }),
     ],
-    content: "Aquí va el texto",
+    content: "", // Asegurar que está vacío
     editorProps: {
       attributes: {
-        class: "text-lg text-gray-400 pt-2 outline-none", // Texto más grande y color gris
+        class: "text-lg text-gray-500 pt-2 px-4 min-h-[200px] rounded-md focus:outline-none",
       },
     },
   });
+  
 
   const savePost = async () => {
     if (!editor || !title) {

@@ -17,7 +17,7 @@ export default function HomeLayout({ children }: LayoutProps) {
   return (
     <div className={`h-screen flex flex-col ${poppins.variable}`}>
       {/* header */}
-      <header className="p-3 bg-white text-black text-center text-3xl font-bold border-b"><Link href="/home" >REFLEXIONES</Link> </header>
+      <header className="p-3 bg-white text-black text-center text-3xl font-bold border-b"><Link href="/home" ><h1>REFLEXIONES</h1></Link> </header>
       <main>
         {children}
       </main>
