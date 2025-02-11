@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface Post {
   _id: string;
@@ -11,6 +13,7 @@ interface Post {
   createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
   updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
   contenido: string;
+  timestamp: string;
 }
 
 export default function Home() {
@@ -19,18 +22,62 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const pathname = usePathname(); // Obtener la ruta actual
 
-  // 📌 Cargar posts desde MongoDB cuando el componente se monta
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch("/api/home");
       const data = await res.json();
-      setPosts(data);
+
+      console.log("Datos antes de ordenar:", data);
+
+      // Ordena los posts por fecha más reciente primero
+      const sortedPosts = data.sort((a: { createdAt?: string; timestamp?: string }, b: { createdAt?: string; timestamp?: string }) => {
+        const dateA = new Date(a.createdAt ?? a.timestamp ?? 0).getTime();
+        const dateB = new Date(b.createdAt ?? b.timestamp ?? 0).getTime();
+        return dateB - dateA;
+      });
+      
+
+      console.log("Datos después de ordenar:", sortedPosts);
+
+      setPosts(sortedPosts);
     };
 
     fetchPosts();
   }, []);
 
-  // 📌 Publicar un nuevo post en MongoDB
+  const formatDate = (post: Post) => {
+    let dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
+
+    if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
+
+    let parsedDate = new Date(dateString);
+
+    // Si `dateString` no es válido, intenta parsearlo
+    if (isNaN(parsedDate.getTime())) {
+      parsedDate = new Date(Date.parse(dateString));
+    }
+
+    // Si sigue sin ser una fecha válida, muestra error
+    if (isNaN(parsedDate.getTime())) {
+      console.error("Error al convertir la fecha:", dateString);
+      return "Fecha inválida";
+    }
+
+    const now = new Date();
+    const diffInDays = Math.floor(
+      (now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffInDays < 30) {
+      return `hace ${formatDistanceToNow(parsedDate, {
+        addSuffix: false,
+        locale: es,
+      })}`;
+    } else {
+      return parsedDate.toLocaleDateString("es-ES");
+    }
+  };
+
   const handleSubmit = async () => {
     if (content.trim() === "") return;
 
@@ -55,23 +102,35 @@ export default function Home() {
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
-            <li className={`border bg-gray-100 p-2 rounded-md ${
-            pathname === "/home" ? "bg-blue-500 text-white font-bold" : ""
-          }`}>Notes</li>
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/home" ? "border font-bold" : ""
+              }`}
+            >
+              Notes
+            </li>
           </Link>
           <Link href="/blog">
-            <li className={`border bg-gray-100 p-2 rounded-md ${
-            pathname === "/blog" ? "bg-blue-500 text-white font-bold" : ""
-          }`}>Articles</li>
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/blog" ? "border text-white font-bold" : ""
+              }`}
+            >
+              Articles
+            </li>
           </Link>
           <Link href="/saves">
-            <li className={`border bg-gray-100 p-2 rounded-md ${
-            pathname === "/saves" ? "bg-blue-500 text-white font-bold" : ""
-          }`}>Articles</li>
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/saves" ? "border text-white font-bold" : ""
+              }`}
+            >
+              Saves
+            </li>
           </Link>
-         
         </ul>
       </div>
+
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
@@ -79,7 +138,6 @@ export default function Home() {
         ></div>
       )}
 
-      {/* Ventana flotante del textarea */}
       <div className="relative">
         <div
           className={`lg:w-[600px] min-w-[300px] border p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
@@ -123,9 +181,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Botón para abrir el textarea */}
         <div className="mt-10">
-            
           <div
             className="bg-white flex items-center gap-4 text-gray-500 p-5 shadow-lg border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
@@ -143,29 +199,43 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Lista de posts */}
         <ul className="mt-10 space-y-3">
           {posts.length === 0 ? (
             <p className="text-gray-500 text-center">
               No hay publicaciones aún.
             </p>
           ) : (
-            posts.map((p) => {
-              // 🔍 Verifica qué valor tiene
-              return (
-                <li key={p._id} className="border-b p-4 bg-white">
+            posts.map((p) => (
+              <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
+                <div>
+                  <div className="rounded-full flex overflow-hidden w-[35px] h-[35px]">
+                    <Image
+                      width={35}
+                      height={35}
+                      src="/images/avatar.jpeg"
+                      alt="avatar"
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                </div>
+                <div>
                   <div className="flex justify-between items-center">
-                    <p className=" text-sm text-gray-500">{p.author}</p>
-                    <p className="text-sm text-gray-500">{new Date(p.createdAt).toLocaleDateString("es-ES")}</p>
+                    <div>
+                      <div>
+                        <p className="text-sm text-gray-500">{p.author}</p>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-gray-500">{formatDate(p)}</p>
                   </div>
                   <p>{p.contenido}</p>
                   <div className="flex space-x-2 mt-2">
                     <HandThumbUpIcon className="w-5 h-5" />
                     <BookmarkIcon className="w-5 h-5" />
                   </div>
-                </li>
-              );
-            })
+                </div>
+              </li>
+            ))
           )}
         </ul>
       </div>

@@ -81,7 +81,7 @@ const TiptapEditor = () => {
     <div>
       <header className="p-4">
         <div>
-          <ul className="flex justify-around items-center">
+          <ul className="flex justify-between items-center">
             <li className="flex gap-2 items-center">
             <button 
               onClick={() => window.history.back()} 
@@ -89,13 +89,15 @@ const TiptapEditor = () => {
             >
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
-            <strong>REFLEXIONES</strong> 
+            <h1 className="relative text-3xl font-bold before:content-[''] before:absolute before:right-[0] before:bottom-[-5] before:text-blue-500 before:w-[10px] before:h-[10px] before:bg-green-400">
+            R
+          </h1>
             </li>
             <li>
               {/* Botón para guardar */}
               <button
                 onClick={savePost}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-blue-600"
               >
                 Continuar
               </button>
@@ -171,8 +173,8 @@ const TiptapEditor = () => {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          className="w-full p-2 mt-4 mb-2 text-4xl font-bold rounded outline-none"
+          placeholder="Add a title"
+          className="w-full p-2 mb-2 text-4xl font-bold rounded outline-none"
         />
 
         {/* Editor */}

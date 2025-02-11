@@ -3,6 +3,9 @@ import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface Post {
   _id: string;
@@ -10,11 +13,13 @@ interface Post {
   content: string;
   createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
   updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
+  timestamp: string;
 }
 
 export default function Blog() {
   const [input, showInput] = useState(false);
   const [post, setPost] = useState<Post[]>([]);
+  const pathname = usePathname(); // Obtener la ruta actual
 
   useEffect(() => {
     fetch("/api/posts")
@@ -22,17 +27,70 @@ export default function Blog() {
       .then((data) => setPost(data));
   }, []);
 
+  const formatDate = (post: Post) => {
+    let dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
+
+    if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
+
+    let parsedDate = new Date(dateString);
+
+    // Si `dateString` no es válido, intenta parsearlo
+    if (isNaN(parsedDate.getTime())) {
+      parsedDate = new Date(Date.parse(dateString));
+    }
+
+    // Si sigue sin ser una fecha válida, muestra error
+    if (isNaN(parsedDate.getTime())) {
+      console.error("Error al convertir la fecha:", dateString);
+      return "Fecha inválida";
+    }
+
+    const now = new Date();
+    const diffInDays = Math.floor(
+      (now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffInDays < 30) {
+      return `hace ${formatDistanceToNow(parsedDate, {
+        addSuffix: false,
+        locale: es,
+      })}`;
+    } else {
+      return parsedDate.toLocaleDateString("es-ES");
+    }
+  };
+
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)]  m-auto relative max-w-[90%] lg:max-w-[500px]">
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
-            <li className="border bg-gray-100 p-2 rounded-md">Notes</li>
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/home" ? "border font-bold" : ""
+              }`}
+            >
+              Notes
+            </li>
           </Link>
           <Link href="/blog">
-            <li className="border bg-gray-100 p-2 rounded-md">Articles</li>
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/blog" ? "border font-bold" : ""
+              }`}
+            >
+              Articles
+            </li>
           </Link>
-          <li className="border bg-gray-100 p-2 rounded-md">Saves</li>
+          <Link href="/saves">
+            <li
+              className={`bg-gray-100 p-2 rounded-md ${
+                pathname === "/saves" ? "border  font-bold" : ""
+              }`}
+            >
+              Saves
+            </li>
+          </Link>
         </ul>
       </div>
       {/* Overlay oscuro cuando el input está activo */}
@@ -83,7 +141,7 @@ export default function Blog() {
         {/* Botón para mostrar el textarea */}
         <div className="mt-10">
           <Link href="/editor">
-            <div className="bg-white flex items-center gap-4 p-5 border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
+            <div className="bg-white flex shadow-md items-center gap-4 p-5 border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
               <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
                 <Image
                   width={40}
@@ -110,7 +168,7 @@ export default function Blog() {
                     <p className="text-sm text-gray-500">Martin Herrera</p>
                     <div>
                       <p className="text-sm text-gray-500">
-                        {new Date(post.createdAt).toLocaleDateString("es-ES")}
+                        {formatDate(post)}
                       </p>
                     </div>
                   </div>
@@ -118,7 +176,13 @@ export default function Blog() {
                     <p>{post.title}</p>
                   </div>
                   <div>
-                    <p>{post.content}</p>
+                    <div>
+                      <p>
+                        {post.content.length > 50
+                          ? post.content.slice(0, 150) + "..."
+                          : post.content}
+                      </p>
+                    </div>
                   </div>
                 </Link>
                 {/* Íconos fuera del Link para evitar que sean clickeables */}
