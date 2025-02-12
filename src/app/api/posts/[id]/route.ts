@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
-import { ObjectId } from "mongodb"; // Importar ObjectId
+import { ObjectId } from "mongodb";
 
 export async function GET(
-  req: Request,
-  context: { params: { id: string } } // Extrae `params` correctamente en App Router
+  req: NextRequest, // ← Cambiado a NextRequest
+  { params }: { params: { id: string } } // Extrae `params` correctamente
 ) {
   try {
     await connectDB();
     
-    const { id } = context.params; // Ahora `id` se extrae correctamente
+    const { id } = params; // Extraemos `id` desde `params`
 
     // Verificar que el ID tiene formato válido antes de hacer la consulta
     if (!ObjectId.isValid(id)) {
