@@ -172,12 +172,12 @@ export default function Blog() {
                       </p>
                     </div>
                   </div>
-                  <div className="font-bold text-xl">
-                    <p>{post.title}</p>
+                  <div className="font-bold w-full text-xl">
+                    <p className="text-gray-800">{post.title}</p>
                   </div>
                   <div>
                     <div>
-                      <p>
+                      <p className="text-gray-800">
                         {post.content.length > 50
                           ? post.content.slice(0, 150) + "..."
                           : post.content}

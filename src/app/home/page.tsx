@@ -218,7 +218,7 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                <div>
+                <div className="w-full">
                   <div className="flex justify-between items-center">
                     <div>
                       <div>
@@ -228,7 +228,7 @@ export default function Home() {
 
                     <p className="text-sm text-gray-500">{formatDate(p)}</p>
                   </div>
-                  <p>{p.contenido}</p>
+                  <p className="text-gray-800">{p.contenido}</p>
                   <div className="flex space-x-2 mt-2">
                     <HandThumbUpIcon className="w-5 h-5" />
                     <BookmarkIcon className="w-5 h-5" />
