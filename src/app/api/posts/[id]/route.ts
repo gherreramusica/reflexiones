@@ -2,22 +2,21 @@ import { NextResponse, NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import { ObjectId } from "mongodb";
+import { RouteHandlerContext } from "next/server";
 
 export async function GET(
-  req: NextRequest, // ← Cambiado a NextRequest
-  { params }: { params: { id: string } } // Extrae `params` correctamente
+  req: NextRequest, 
+  context: RouteHandlerContext<{ id: string }> // Usa RouteHandlerContext
 ) {
   try {
     await connectDB();
     
-    const { id } = params; // Extraemos `id` desde `params`
+    const { id } = context.params; 
 
-    // Verificar que el ID tiene formato válido antes de hacer la consulta
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
-    // Buscar el post por ID
     const post = await Post.findById(new ObjectId(id));
 
     if (!post) {
