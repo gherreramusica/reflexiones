@@ -89,9 +89,9 @@ const TiptapEditor = () => {
             >
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
-            <h1 className="relative text-3xl font-bold before:content-[''] before:absolute before:right-[0] before:bottom-[-5] before:text-blue-500 before:w-[10px] before:h-[10px] before:bg-green-400">
-            R
-          </h1>
+            <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400 before:text-blue-500">
+              R
+            </h1>
             </li>
             <li>
               {/* Botón para guardar */}
