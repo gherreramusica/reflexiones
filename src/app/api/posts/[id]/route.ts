@@ -3,17 +3,16 @@ import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import { ObjectId } from "mongodb";
 
-interface Context {
-  params: { id: string };
-}
-
-export async function GET(req: NextRequest, { params }: Context) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Record<string, string> } // Tipo correcto para parámetros dinámicos
+) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const id = params.id;
 
-    if (!ObjectId.isValid(id)) {
+    if (!id || !ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
