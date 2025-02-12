@@ -46,7 +46,7 @@ export default function Home() {
   }, []);
 
   const formatDate = (post: Post) => {
-    let dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
+    const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
 
     if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
 
