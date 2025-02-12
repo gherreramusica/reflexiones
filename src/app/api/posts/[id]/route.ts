@@ -4,15 +4,16 @@ import Post from "@/models/Post";
 import { ObjectId } from "mongodb";
 
 export async function GET(
-  req: NextRequest, 
-  { params }: { params: { id: string } } // Tipo correcto
+  req: NextRequest,
+  context: { params?: { id?: string } } // Parámetros opcionales para evitar errores
 ) {
   try {
     await connectDB();
-    
-    const { id } = params;
 
-    if (!ObjectId.isValid(id)) {
+    // Validar si `context.params` y `id` existen antes de usarlos
+    const id = context.params?.id;
+
+    if (!id || !ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
