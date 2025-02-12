@@ -2,16 +2,15 @@ import { NextResponse, NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import { ObjectId } from "mongodb";
-import { RouteHandlerContext } from "next/server";
 
 export async function GET(
   req: NextRequest, 
-  context: RouteHandlerContext<{ id: string }> // Usa RouteHandlerContext
+  { params }: { params: { id: string } } // Tipo correcto
 ) {
   try {
     await connectDB();
     
-    const { id } = context.params; 
+    const { id } = params;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
