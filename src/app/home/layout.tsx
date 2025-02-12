@@ -14,7 +14,11 @@ interface LayoutProps {
 
 export default function HomeLayout({ children }: LayoutProps) {
   return (
-    <div className={`h-screen flex flex-col ${poppins.variable}`}>
+    <div className={`h-screen flex flex-col ${poppins.variable} relative`}>
+      <h1 className="fixed top-[45%] left-[0%] hidden lg:block  text-[100px] font-bold text-gray-100  rotate-90">
+  REFLEXIONES
+</h1>
+
       {/* header */}
       <header className="p-3 sticky top-0 z-[99] bg-white text-black text-center text-3xl font-bold border-b">
         <div className="relative w-fit m-auto">

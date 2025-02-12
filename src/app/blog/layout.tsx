@@ -7,7 +7,10 @@ interface LayoutProps {
 
 export default function BlogLayout({ children }: LayoutProps) {
   return (
-    <div className="h-screen flex flex-col ">
+    <div className="h-screen flex flex-col relative ">
+            <h1 className="fixed hidden lg:block top-[45%] left-[0%]  text-[100px] font-bold text-gray-100  rotate-90">
+  REFLEXIONES
+</h1>
       {/* header */}
       <header className="p-3 sticky top-0 z-[99] bg-white text-black text-center text-3xl font-bold border-b">
         <div className="relative w-fit m-auto">
