@@ -72,13 +72,7 @@ export default function SinglePost() {
       <div className="max-w-3xl mx-auto mt-5 p-6 ">
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         {post.extract && <p className="text-gray-500">{post.extract}</p>}
-        {post.image && (
-          <img
-            src={post.image}
-            alt={post.title}
-            className="w-full h-auto my-4 rounded"
-          />
-        )}
+
         {post.author && (
           <p className="text-sm text-gray-400">Escrito por: {post.author}</p>
         )}
