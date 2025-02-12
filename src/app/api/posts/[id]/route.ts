@@ -3,14 +3,13 @@ import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/Post";
 import { ObjectId } from "mongodb";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Record<string, string> } // Tipo correcto para parámetros dinámicos
-) {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
-    const id = params.id;
+    // Obtener el ID desde la URL
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop(); // Extrae el último segmento de la URL
 
     if (!id || !ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
