@@ -45,13 +45,31 @@ export default function Home() {
   }, []);
 
   const booksDictionary: { [key: string]: string } = {
+    "genesis": "Génesis",
+    "exodo": "Éxodo",
+    "levitico": "Levítico",
+    "numeros": "Números",
+    "deuteronomio": "Deuteronomio",
+    "josue": "Josué",
+    "job": "Job",
+    "salmos": "Salmos",
+    "proverbios": "Proverbios",
+    "eclesiastes": "Eclesiastés",
+    "isaias": "Isaías",
+    "jeremias": "Jeremías",
+    "daniel": "Daniel",
+    "jonas": "Jonás",
     "mateo": "Mateo",
     "marcos": "Marcos",
     "lucas": "Lucas",
     "juan": "Juan",
-    "salmos": "Salmos",
-    "proverbios": "Proverbios"
+    "hechos": "Hechos",
+    "romanos": "Romanos",
+    "efesios": "Efesios",
+    "hebreos": "Hebreos",
+    "apocalipsis": "Apocalipsis"
   };
+  
 
   const fetchRandomVerse = async () => {
     try {
@@ -65,6 +83,9 @@ export default function Home() {
       // Generar capítulo y versículo aleatorio
       const randomChapter = Math.floor(Math.random() * 10) + 1;
       const randomVerse = Math.floor(Math.random() * 10) + 1;
+
+      console.log(`📖 Seleccionado: ${randomBookName} (${randomBookKey})`);
+
 
       // Hacer la petición a la API con los valores aleatorios
       const res = await fetch(`https://bible-api.deno.dev/api/read/nvi/${randomBookKey}/${randomChapter}/${randomVerse}`);
@@ -137,7 +158,7 @@ export default function Home() {
         <p className="italic">{verse}</p>
         <button
           onClick={fetchRandomVerse}
-          className="mt-2 m-auto px-4 py-2 bg-blue-500 text-white rounded-md flex items-center gap-2"
+          className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
           disabled={loadingVerse} // Deshabilita el botón mientras carga
         >
           {loadingVerse ? (
@@ -145,7 +166,7 @@ export default function Home() {
               <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
             </>
           ) : (
-            "🔄 Actualizar Versículo"
+            "Actualizar Versículo"
           )}
         </button>
       </div>
