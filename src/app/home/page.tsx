@@ -130,17 +130,15 @@ export default function Home() {
           </Link>
         </ul>
       </div>
-
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
           onClick={() => showInput(false)}
         ></div>
       )}
-
       <div className="relative">
         <div
-          className={`lg:w-[600px] min-w-[300px] border p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
+          className={`lg:w-[600px] min-w-[300px] border p-4 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md bg-white ${
             input ? "block" : "hidden"
           } z-[20]`}
           onClick={(e) => e.stopPropagation()}
@@ -180,10 +178,9 @@ export default function Home() {
             </button>
           </div>
         </div>
-
         <div className="mt-10">
           <div
-            className="bg-white flex items-center gap-4 text-gray-500 p-5 shadow-lg border cursor-pointer min-w-[330px] rounded-md"
+            className="bg-white flex items-center gap-4 text-gray-500 p-5 shadow-md border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
           >
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
@@ -198,7 +195,6 @@ export default function Home() {
             <p>Escribe algo...</p>
           </div>
         </div>
-
         <ul className="mt-10 space-y-3">
           {posts.length === 0 ? (
             <p className="text-gray-500 text-center">
@@ -225,7 +221,6 @@ export default function Home() {
                         <p className="text-sm text-gray-500">{p.author}</p>
                       </div>
                     </div>
-
                     <p className="text-sm text-gray-500">{formatDate(p)}</p>
                   </div>
                   <p className="text-gray-800">{p.contenido}</p>
