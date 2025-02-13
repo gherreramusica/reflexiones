@@ -23,6 +23,10 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [verse, setVerse] = useState("Cargando versículo...");
   const [loadingVerse, setLoadingVerse] = useState(true);
+  const [selectedBook, setSelectedBook] = useState(""); // Guardar el libro seleccionado
+  const [selectedChapter, setSelectedChapter] = useState(""); // Guardar el capítulo seleccionado
+  const [loadingChapter, setLoadingChapter] = useState(false);
+  const [chapter, setChapter] = useState(""); // Estado para almacenar el capítulo completo
   const pathname = usePathname(); // Obtener la ruta actual
 
   useEffect(() => {
@@ -83,6 +87,7 @@ export default function Home() {
   const fetchRandomVerse = async () => {
     try {
       setLoadingVerse(true);
+      setChapter(""); // Limpiar capítulo anterior
 
       // Seleccionar un libro aleatorio de la lista
       const books = Object.keys(booksDictionary);
@@ -107,6 +112,8 @@ export default function Home() {
 
       if (data && data.verse) {
         setVerse(`${randomBookName} ${randomChapter}:${randomVerse} - ${data.verse}`);
+        setSelectedBook(randomBookKey); // Guardar el libro seleccionado
+        setSelectedChapter(randomChapter.toString()); // Guardar el capítulo seleccionado
       } else {
         setVerse("No se pudo cargar el versículo.");
       }
@@ -117,6 +124,44 @@ export default function Home() {
       setLoadingVerse(false);
     }
   };
+
+  const fetchFullChapter = async () => {
+    if (!selectedBook || !selectedChapter) return;
+  
+    try {
+      setLoadingChapter(true);
+      setChapter(""); // Limpiar el capítulo anterior
+  
+      console.log(`📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`);
+  
+      const res = await fetch(`https://bible-api.deno.dev/api/read/nvi/${selectedBook}/${selectedChapter}`);
+      
+      if (!res.ok) {
+        throw new Error(`Error HTTP: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log("📖 Datos del capítulo completo:", data);
+  
+      if (data && data.vers) {
+        // Convertir array de versículos en un texto formateado
+        const formattedChapter = data.vers
+          .map((verse: { number: number; verse: string }) => `${verse.number}. ${verse.verse}`)
+          .join(" ");
+  
+        setChapter(formattedChapter);
+      } else {
+        setChapter("No se pudo cargar el capítulo.");
+      }
+    } catch (error) {
+      console.error("❌ Error obteniendo el capítulo:", error);
+      setChapter("No se pudo cargar el capítulo.");
+    } finally {
+      setLoadingChapter(false);
+    }
+  };
+  
+  
 
   const formatDate = (post: Post) => {
     const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
@@ -188,6 +233,27 @@ export default function Home() {
             "Actualizar Versículo"
           )}
         </button>
+        <button
+          onClick={fetchFullChapter}
+          className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
+          disabled={loadingChapter}
+        >
+          {loadingChapter ? (
+            <>
+              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando capítulo...
+            </>
+          ) : (
+            "Mostrar capítulo completo"
+          )}
+        </button>
+        {/* Mostrar el capítulo completo si ya fue cargado */}
+        {chapter && (
+  <div className="mt-5 p-4 bg-gray-100 rounded-md">
+    <p className="font-bold text-lg">📖 {booksDictionary[selectedBook]} {selectedChapter}</p>
+    <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
+  </div>
+)}
+
       </div>
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
