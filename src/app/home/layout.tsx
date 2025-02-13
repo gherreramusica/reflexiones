@@ -51,7 +51,7 @@ export default function HomeLayout({ children }: LayoutProps) {
       {/* Segundo Header (aparece al hacer scroll) */}
       <header
         className={`rounded-lg w-[80%] fixed left-1/2 top-0 transform -translate-x-1/2  z-[98] bg-black text-white text-center text-2xl font-bold p-3 transition-transform duration-300 ${
-          showStickyHeader ? "translate-y-5" : "-translate-y-full"
+          showStickyHeader ? "translate-y-2" : "-translate-y-full"
         }`}
       >
         <div className="relative w-fit m-auto">
