@@ -29,6 +29,7 @@ export default function Home() {
   const [chapter, setChapter] = useState(""); // Estado para almacenar el capítulo completo
   const pathname = usePathname(); // Obtener la ruta actual
   const [closeChapter, setCloseChapter] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -59,31 +60,30 @@ export default function Home() {
   }, []);
 
   const booksDictionary: { [key: string]: string } = {
-    "genesis": "Génesis",
-    "exodo": "Éxodo",
-    "levitico": "Levítico",
-    "numeros": "Números",
-    "deuteronomio": "Deuteronomio",
-    "josue": "Josué",
-    "job": "Job",
-    "salmos": "Salmos",
-    "proverbios": "Proverbios",
-    "eclesiastes": "Eclesiastés",
-    "isaias": "Isaías",
-    "jeremias": "Jeremías",
-    "daniel": "Daniel",
-    "jonas": "Jonás",
-    "mateo": "Mateo",
-    "marcos": "Marcos",
-    "lucas": "Lucas",
-    "juan": "Juan",
-    "hechos": "Hechos",
-    "romanos": "Romanos",
-    "efesios": "Efesios",
-    "hebreos": "Hebreos",
-    "apocalipsis": "Apocalipsis"
+    genesis: "Génesis",
+    exodo: "Éxodo",
+    levitico: "Levítico",
+    numeros: "Números",
+    deuteronomio: "Deuteronomio",
+    josue: "Josué",
+    job: "Job",
+    salmos: "Salmos",
+    proverbios: "Proverbios",
+    eclesiastes: "Eclesiastés",
+    isaias: "Isaías",
+    jeremias: "Jeremías",
+    daniel: "Daniel",
+    jonas: "Jonás",
+    mateo: "Mateo",
+    marcos: "Marcos",
+    lucas: "Lucas",
+    juan: "Juan",
+    hechos: "Hechos",
+    romanos: "Romanos",
+    efesios: "Efesios",
+    hebreos: "Hebreos",
+    apocalipsis: "Apocalipsis",
   };
-  
 
   const fetchRandomVerse = async () => {
     try {
@@ -101,9 +101,10 @@ export default function Home() {
 
       console.log(`📖 Seleccionado: ${randomBookName} (${randomBookKey})`);
 
-
       // Hacer la petición a la API con los valores aleatorios
-      const res = await fetch(`https://bible-api.deno.dev/api/read/nvi/${randomBookKey}/${randomChapter}/${randomVerse}`);
+      const res = await fetch(
+        `https://bible-api.deno.dev/api/read/nvi/${randomBookKey}/${randomChapter}/${randomVerse}`
+      );
 
       if (!res.ok) {
         throw new Error(`Error HTTP: ${res.status}`);
@@ -112,7 +113,9 @@ export default function Home() {
       const data = await res.json();
 
       if (data && data.verse) {
-        setVerse(`${randomBookName} ${randomChapter}:${randomVerse} - ${data.verse}`);
+        setVerse(
+          `${randomBookName} ${randomChapter}:${randomVerse} - ${data.verse}`
+        );
         setSelectedBook(randomBookKey); // Guardar el libro seleccionado
         setSelectedChapter(randomChapter.toString()); // Guardar el capítulo seleccionado
       } else {
@@ -129,28 +132,35 @@ export default function Home() {
   const fetchFullChapter = async () => {
     if (!selectedBook || !selectedChapter) return;
     setCloseChapter(true);
-  
+
     try {
       setLoadingChapter(true);
       setChapter(""); // Limpiar el capítulo anterior
-  
-      console.log(`📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`);
-  
-      const res = await fetch(`https://bible-api.deno.dev/api/read/nvi/${selectedBook}/${selectedChapter}`);
-      
+
+      console.log(
+        `📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`
+      );
+
+      const res = await fetch(
+        `https://bible-api.deno.dev/api/read/nvi/${selectedBook}/${selectedChapter}`
+      );
+
       if (!res.ok) {
         throw new Error(`Error HTTP: ${res.status}`);
       }
-  
+
       const data = await res.json();
       console.log("📖 Datos del capítulo completo:", data);
-  
+
       if (data && data.vers) {
         // Convertir array de versículos en un texto formateado
         const formattedChapter = data.vers
-          .map((verse: { number: number; verse: string }) => `${verse.number}. ${verse.verse}`)
+          .map(
+            (verse: { number: number; verse: string }) =>
+              `${verse.number}. ${verse.verse}`
+          )
           .join(" ");
-  
+
         setChapter(formattedChapter);
       } else {
         setChapter("No se pudo cargar el capítulo.");
@@ -162,8 +172,6 @@ export default function Home() {
       setLoadingChapter(false);
     }
   };
-  
-  
 
   const formatDate = (post: Post) => {
     const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
@@ -215,14 +223,24 @@ export default function Home() {
       setContent("");
       showInput(false);
     }
+    setSuccessMessage(true);
+    setTimeout( () => {
+      setSuccessMessage(false);
+    }
+      ,1000
+    )
+
   };
 
   const handleCloseChapter = () => {
     setCloseChapter(!closeChapter);
-  }
+  };
 
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
+      <div className={`${successMessage ? 'block' : 'hidden'} p-3 mt-5 border rounded-lg bg-green-500 text-center w-[100%] m-auto text-white`}>
+        <h4>Mensaje Enviado</h4>
+      </div>
       <div className="mt-5 p-4 bg-gray-200 text-center rounded-md">
         <p className="font-bold text-lg">📖 Versículo del Día:</p>
         <p className="italic">{verse}</p>
@@ -246,28 +264,33 @@ export default function Home() {
         >
           {loadingChapter ? (
             <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando capítulo...
+              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando
+              capítulo...
             </>
           ) : (
             "Mostrar capítulo completo"
           )}
         </button>
-        
 
         {/* Mostrar el capítulo completo si ya fue cargado */}
         {chapter && (
-          <div className={`mt-5 p-4 bg-gray-100 relative rounded-md ${closeChapter ? 'block' : 'hidden'}`}>
-            <button 
-          className="absolute font-bold top-0 left-0 p-3 underline"
-          onClick={handleCloseChapter}
-        >
-          {closeChapter ? "Ocultar" : "Mostrar"}
-        </button>
-            <p className="font-bold text-lg">📖 {booksDictionary[selectedBook]} {selectedChapter}</p>
+          <div
+            className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
+              closeChapter ? "block" : "hidden"
+            }`}
+          >
+            <button
+              className="absolute font-bold top-0 left-0 p-3 underline"
+              onClick={handleCloseChapter}
+            >
+              {closeChapter ? "Ocultar" : "Mostrar"}
+            </button>
+            <p className="font-bold text-lg">
+              📖 {booksDictionary[selectedBook]} {selectedChapter}
+            </p>
             <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
           </div>
         )}
-
       </div>
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
