@@ -30,29 +30,37 @@ export default function Home() {
   const pathname = usePathname(); // Obtener la ruta actual
   const [closeChapter, setCloseChapter] = useState(true);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("/api/home");
-      const data = await res.json();
+      setLoadingPosts(true); // Activa el loading cuando se inicie la carga
+      try {
+        const res = await fetch("/api/home");
+        const data = await res.json();
 
-      console.log("Datos antes de ordenar:", data);
+        console.log("Datos antes de ordenar:", data);
 
-      // Ordena los posts por fecha más reciente primero
-      const sortedPosts = data.sort(
-        (
-          a: { createdAt?: string; timestamp?: string },
-          b: { createdAt?: string; timestamp?: string }
-        ) => {
-          const dateA = new Date(a.createdAt ?? a.timestamp ?? 0).getTime();
-          const dateB = new Date(b.createdAt ?? b.timestamp ?? 0).getTime();
-          return dateB - dateA;
-        }
-      );
+        // Ordena los posts por fecha más reciente primero
+        const sortedPosts = data.sort(
+          (
+            a: { createdAt?: string; timestamp?: string },
+            b: { createdAt?: string; timestamp?: string }
+          ) => {
+            const dateA = new Date(a.createdAt ?? a.timestamp ?? 0).getTime();
+            const dateB = new Date(b.createdAt ?? b.timestamp ?? 0).getTime();
+            return dateB - dateA;
+          }
+        );
 
-      console.log("Datos después de ordenar:", sortedPosts);
+        console.log("Datos después de ordenar:", sortedPosts);
 
-      setPosts(sortedPosts);
+        setPosts(sortedPosts);
+      } catch (error) {
+        console.error("Error fetching posts", error);
+      } finally {
+        setLoadingPosts(false); // Desactiva el loading cuando la carga haya terminado
+      }
     };
 
     fetchPosts();
@@ -388,11 +396,15 @@ export default function Home() {
             <p>Escribe algo...</p>
           </div>
         </div>
+        {loadingPosts ? (
+        <div className="flex justify-center items-center p-e mt-10">
+          <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+       
+        </div>
+      ) : (
         <ul className="mt-10 space-y-3">
           {posts.length === 0 ? (
-            <p className="text-gray-500 text-center">
-              No hay publicaciones aún.
-            </p>
+            <p className="text-gray-500 text-center">No hay publicaciones aún.</p>
           ) : (
             posts.map((p) => (
               <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
@@ -426,6 +438,7 @@ export default function Home() {
             ))
           )}
         </ul>
+      )}
       </div>
     </section>
   );
