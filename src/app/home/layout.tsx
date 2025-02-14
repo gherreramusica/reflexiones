@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
 import { ReactNode, useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
+import { Bars3Icon, UserIcon } from "@heroicons/react/24/outline"; // Importar los íconos de Heroicons
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -38,13 +39,27 @@ export default function HomeLayout({ children }: LayoutProps) {
       </h1>
 
       {/* Header principal */}
-      <header className="p-3 z-[99] bg-white text-black text-center text-3xl font-bold border-b">
-        <div className="relative w-fit m-auto">
+      <header className="p-3 z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
+        {/* Menu Hamburguer */}
+        <div className="flex items-center">
+          <button className="text-lg">
+            <Bars3Icon className="w-6 h-6" /> {/* Ícono de menú hamburguesa */}
+          </button>
+        </div>
+
+        {/* Logo */}
+        <div className="relative w-fit">
           <Link href="/home">
             <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400">
               R
             </h1>
           </Link>
+        </div>
+
+        {/* Icono del usuario */}
+        <div className="flex items-center">
+          <UserIcon className="w-6 h-6 text-gray-700" />{" "}
+          {/* Ícono de usuario */}
         </div>
       </header>
 
