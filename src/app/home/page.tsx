@@ -28,6 +28,7 @@ export default function Home() {
   const [loadingChapter, setLoadingChapter] = useState(false);
   const [chapter, setChapter] = useState(""); // Estado para almacenar el capítulo completo
   const pathname = usePathname(); // Obtener la ruta actual
+  const [closeChapter, setCloseChapter] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -127,6 +128,7 @@ export default function Home() {
 
   const fetchFullChapter = async () => {
     if (!selectedBook || !selectedChapter) return;
+    setCloseChapter(true);
   
     try {
       setLoadingChapter(true);
@@ -215,6 +217,10 @@ export default function Home() {
     }
   };
 
+  const handleCloseChapter = () => {
+    setCloseChapter(!closeChapter);
+  }
+
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
       <div className="mt-5 p-4 bg-gray-200 text-center rounded-md">
@@ -246,13 +252,21 @@ export default function Home() {
             "Mostrar capítulo completo"
           )}
         </button>
+        
+
         {/* Mostrar el capítulo completo si ya fue cargado */}
         {chapter && (
-  <div className="mt-5 p-4 bg-gray-100 rounded-md">
-    <p className="font-bold text-lg">📖 {booksDictionary[selectedBook]} {selectedChapter}</p>
-    <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
-  </div>
-)}
+          <div className={`mt-5 p-4 bg-gray-100 relative rounded-md ${closeChapter ? 'block' : 'hidden'}`}>
+            <button 
+          className="absolute font-bold top-0 left-0 p-3 underline"
+          onClick={handleCloseChapter}
+        >
+          {closeChapter ? "Ocultar" : "Mostrar"}
+        </button>
+            <p className="font-bold text-lg">📖 {booksDictionary[selectedBook]} {selectedChapter}</p>
+            <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
+          </div>
+        )}
 
       </div>
       <div className="mt-10">
