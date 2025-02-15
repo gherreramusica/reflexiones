@@ -1,16 +1,15 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-export default function Bible(){
+export default function Bible() {
   const [verse, setVerse] = useState("Cargando versículo...");
   const [loadingVerse, setLoadingVerse] = useState(true);
-  const [selectedBook, setSelectedBook] = useState(""); // Guardar el libro seleccionado
-  const [selectedChapter, setSelectedChapter] = useState(""); // Guardar el capítulo seleccionado
+  const [selectedBook, setSelectedBook] = useState(""); 
+  const [selectedChapter, setSelectedChapter] = useState(""); 
   const [loadingChapter, setLoadingChapter] = useState(false);
-  const [chapter, setChapter] = useState(""); // Estado para almacenar el capítulo completo
+  const [chapter, setChapter] = useState(""); 
   const [closeChapter, setCloseChapter] = useState(true);
-
 
   const booksDictionary: { [key: string]: string } = {
     genesis: "Génesis",
@@ -38,27 +37,21 @@ export default function Bible(){
     apocalipsis: "Apocalipsis",
   };
 
-  useEffect(() => {
-    fetchRandomVerse();
-  }, [])
-
-  const fetchRandomVerse = async () => {
+  // 🔹 Usamos useCallback para memorizar la función y evitar recreaciones
+  const fetchRandomVerse = useCallback(async () => {
     try {
       setLoadingVerse(true);
-      setChapter(""); // Limpiar capítulo anterior
+      setChapter("");
 
-      // Seleccionar un libro aleatorio de la lista
       const books = Object.keys(booksDictionary);
       const randomBookKey = books[Math.floor(Math.random() * books.length)];
       const randomBookName = booksDictionary[randomBookKey];
 
-      // Generar capítulo y versículo aleatorio
       const randomChapter = Math.floor(Math.random() * 10) + 1;
       const randomVerse = Math.floor(Math.random() * 10) + 1;
 
       console.log(`📖 Seleccionado: ${randomBookName} (${randomBookKey})`);
 
-      // Hacer la petición a la API con los valores aleatorios
       const res = await fetch(
         `https://bible-api.deno.dev/api/read/nvi/${randomBookKey}/${randomChapter}/${randomVerse}`
       );
@@ -73,8 +66,8 @@ export default function Bible(){
         setVerse(
           `${randomBookName} ${randomChapter}:${randomVerse} - ${data.verse}`
         );
-        setSelectedBook(randomBookKey); // Guardar el libro seleccionado
-        setSelectedChapter(randomChapter.toString()); // Guardar el capítulo seleccionado
+        setSelectedBook(randomBookKey);
+        setSelectedChapter(randomChapter.toString());
       } else {
         setVerse("No se pudo cargar el versículo.");
       }
@@ -84,7 +77,11 @@ export default function Bible(){
     } finally {
       setLoadingVerse(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchRandomVerse();
+  }, [fetchRandomVerse]); // 🔹 Ahora React no mostrará advertencias
 
   const fetchFullChapter = async () => {
     if (!selectedBook || !selectedChapter) return;
@@ -92,7 +89,7 @@ export default function Bible(){
 
     try {
       setLoadingChapter(true);
-      setChapter(""); // Limpiar el capítulo anterior
+      setChapter("");
 
       console.log(
         `📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`
@@ -110,7 +107,6 @@ export default function Bible(){
       console.log("📖 Datos del capítulo completo:", data);
 
       if (data && data.vers) {
-        // Convertir array de versículos en un texto formateado
         const formattedChapter = data.vers
           .map(
             (verse: { number: number; verse: string }) =>
@@ -134,58 +130,55 @@ export default function Bible(){
     setCloseChapter(!closeChapter);
   };
 
-return(
-<div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-[100%]">
-        <p className="font-bold text-lg">📖 Versículo del Día:</p>
-        <p className="italic">{verse}</p>
-        <button
-          onClick={fetchRandomVerse}
-          className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
-          disabled={loadingVerse} // Deshabilita el botón mientras carga
-        >
-          {loadingVerse ? (
-            <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
-            </>
-          ) : (
-            "Actualizar Versículo"
-          )}
-        </button>
-        <button
-          onClick={fetchFullChapter}
-          className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
-          disabled={loadingChapter}
-        >
-          {loadingChapter ? (
-            <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando
-              capítulo...
-            </>
-          ) : (
-            "Mostrar capítulo completo"
-          )}
-        </button>
-
-        {/* Mostrar el capítulo completo si ya fue cargado */}
-        {chapter && (
-          <div
-            className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
-              closeChapter ? "block" : "hidden"
-            }`}
-          >
-            <button
-              className="absolute font-bold top-0 left-0 p-3 underline"
-              onClick={handleCloseChapter}
-            >
-              {closeChapter ? "Ocultar" : "Mostrar"}
-            </button>
-            <p className="font-bold text-lg">
-              📖 {booksDictionary[selectedBook]} {selectedChapter}
-            </p>
-            <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
-          </div>
+  return (
+    <div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-[100%]">
+      <p className="font-bold text-lg">📖 Versículo del Día:</p>
+      <p className="italic">{verse}</p>
+      <button
+        onClick={fetchRandomVerse}
+        className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
+        disabled={loadingVerse}
+      >
+        {loadingVerse ? (
+          <>
+            <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
+          </>
+        ) : (
+          "Actualizar Versículo"
         )}
-      </div>
-)
-} 
+      </button>
+      <button
+        onClick={fetchFullChapter}
+        className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
+        disabled={loadingChapter}
+      >
+        {loadingChapter ? (
+          <>
+            <AiOutlineLoading3Quarters className="animate-spin" /> Cargando capítulo...
+          </>
+        ) : (
+          "Mostrar capítulo completo"
+        )}
+      </button>
 
+      {chapter && (
+        <div
+          className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
+            closeChapter ? "block" : "hidden"
+          }`}
+        >
+          <button
+            className="absolute font-bold top-0 left-0 p-3 underline"
+            onClick={handleCloseChapter}
+          >
+            {closeChapter ? "Ocultar" : "Mostrar"}
+          </button>
+          <p className="font-bold text-lg">
+            📖 {booksDictionary[selectedBook]} {selectedChapter}
+          </p>
+          <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
+        </div>
+      )}
+    </div>
+  );
+}
