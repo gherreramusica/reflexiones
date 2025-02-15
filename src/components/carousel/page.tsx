@@ -36,13 +36,14 @@ const Carousel: React.FC = () => {
       <Slider {...settings}>
         {modules.map((module, index) => (
           <div key={index} className="w-full relative">
-            {renderModule(module)}
             <button
               onClick={() => removeModule(module)}
-              className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md absolute top-0 right-0"
+              className="mt-2 px-4 py-1 bg-red-600 text-white rounded-md"
             >
               Quitar {module}
             </button>
+            {renderModule(module)}
+            
           </div>
         ))}
       </Slider>

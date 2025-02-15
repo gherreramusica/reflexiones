@@ -131,7 +131,7 @@ export default function Bible() {
   };
 
   return (
-    <div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-[100%]">
+    <div className=" p-4 bg-gray-200 text-center rounded-md w-[100%]">
       <p className="font-bold text-lg">📖 Versículo del Día:</p>
       <p className="italic">{verse}</p>
       <button
