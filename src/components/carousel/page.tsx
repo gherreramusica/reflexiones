@@ -38,7 +38,7 @@ const Carousel: React.FC = () => {
           <div key={index} className="w-full relative">
             <button
               onClick={() => removeModule(module)}
-              className="mt-2 px-4 py-1 bg-red-600 text-white rounded-md"
+              className="mt-2 px-4 py-1 bg-black text-white rounded-md"
             >
               Quitar {module}
             </button>
