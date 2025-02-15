@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { AiOutlineLoading3Quarters } from "react-icons/ai"; // 📌 Icono de carga
 import { es } from "date-fns/locale";
+import Carousel from "@/components/carousel/page";
+
 
 interface Post {
   _id: string;
@@ -21,14 +23,9 @@ export default function Home() {
   const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
-  const [verse, setVerse] = useState("Cargando versículo...");
-  const [loadingVerse, setLoadingVerse] = useState(true);
-  const [selectedBook, setSelectedBook] = useState(""); // Guardar el libro seleccionado
-  const [selectedChapter, setSelectedChapter] = useState(""); // Guardar el capítulo seleccionado
-  const [loadingChapter, setLoadingChapter] = useState(false);
-  const [chapter, setChapter] = useState(""); // Estado para almacenar el capítulo completo
+
   const pathname = usePathname(); // Obtener la ruta actual
-  const [closeChapter, setCloseChapter] = useState(true);
+
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
@@ -64,122 +61,7 @@ export default function Home() {
     };
 
     fetchPosts();
-    fetchRandomVerse();
   }, []);
-
-  const booksDictionary: { [key: string]: string } = {
-    genesis: "Génesis",
-    exodo: "Éxodo",
-    levitico: "Levítico",
-    numeros: "Números",
-    deuteronomio: "Deuteronomio",
-    josue: "Josué",
-    job: "Job",
-    salmos: "Salmos",
-    proverbios: "Proverbios",
-    eclesiastes: "Eclesiastés",
-    isaias: "Isaías",
-    jeremias: "Jeremías",
-    daniel: "Daniel",
-    jonas: "Jonás",
-    mateo: "Mateo",
-    marcos: "Marcos",
-    lucas: "Lucas",
-    juan: "Juan",
-    hechos: "Hechos",
-    romanos: "Romanos",
-    efesios: "Efesios",
-    hebreos: "Hebreos",
-    apocalipsis: "Apocalipsis",
-  };
-
-  const fetchRandomVerse = async () => {
-    try {
-      setLoadingVerse(true);
-      setChapter(""); // Limpiar capítulo anterior
-
-      // Seleccionar un libro aleatorio de la lista
-      const books = Object.keys(booksDictionary);
-      const randomBookKey = books[Math.floor(Math.random() * books.length)];
-      const randomBookName = booksDictionary[randomBookKey];
-
-      // Generar capítulo y versículo aleatorio
-      const randomChapter = Math.floor(Math.random() * 10) + 1;
-      const randomVerse = Math.floor(Math.random() * 10) + 1;
-
-      console.log(`📖 Seleccionado: ${randomBookName} (${randomBookKey})`);
-
-      // Hacer la petición a la API con los valores aleatorios
-      const res = await fetch(
-        `https://bible-api.deno.dev/api/read/nvi/${randomBookKey}/${randomChapter}/${randomVerse}`
-      );
-
-      if (!res.ok) {
-        throw new Error(`Error HTTP: ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      if (data && data.verse) {
-        setVerse(
-          `${randomBookName} ${randomChapter}:${randomVerse} - ${data.verse}`
-        );
-        setSelectedBook(randomBookKey); // Guardar el libro seleccionado
-        setSelectedChapter(randomChapter.toString()); // Guardar el capítulo seleccionado
-      } else {
-        setVerse("No se pudo cargar el versículo.");
-      }
-    } catch (error) {
-      console.error("Error obteniendo el versículo:", error);
-      setVerse("No se pudo cargar el versículo.");
-    } finally {
-      setLoadingVerse(false);
-    }
-  };
-
-  const fetchFullChapter = async () => {
-    if (!selectedBook || !selectedChapter) return;
-    setCloseChapter(true);
-
-    try {
-      setLoadingChapter(true);
-      setChapter(""); // Limpiar el capítulo anterior
-
-      console.log(
-        `📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`
-      );
-
-      const res = await fetch(
-        `https://bible-api.deno.dev/api/read/nvi/${selectedBook}/${selectedChapter}`
-      );
-
-      if (!res.ok) {
-        throw new Error(`Error HTTP: ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log("📖 Datos del capítulo completo:", data);
-
-      if (data && data.vers) {
-        // Convertir array de versículos en un texto formateado
-        const formattedChapter = data.vers
-          .map(
-            (verse: { number: number; verse: string }) =>
-              `${verse.number}. ${verse.verse}`
-          )
-          .join(" ");
-
-        setChapter(formattedChapter);
-      } else {
-        setChapter("No se pudo cargar el capítulo.");
-      }
-    } catch (error) {
-      console.error("❌ Error obteniendo el capítulo:", error);
-      setChapter("No se pudo cargar el capítulo.");
-    } finally {
-      setLoadingChapter(false);
-    }
-  };
 
   const formatDate = (post: Post) => {
     const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
@@ -232,74 +114,25 @@ export default function Home() {
       showInput(false);
     }
     setSuccessMessage(true);
-    setTimeout( () => {
+    setTimeout(() => {
       setSuccessMessage(false);
-    }
-      ,1000
-    )
-
-  };
-
-  const handleCloseChapter = () => {
-    setCloseChapter(!closeChapter);
+    }, 1000);
   };
 
   return (
+
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
-      <div className={`${successMessage ? 'block' : 'hidden'} p-3 mt-5 border rounded-lg bg-green-500 text-center w-[100%] m-auto text-white`}>
+      <div
+        className={`${
+          successMessage ? "block" : "hidden"
+        } p-3 mt-5 border rounded-lg bg-green-500 text-center w-[100%] m-auto text-white`}
+      >
         <h4>Mensaje Enviado</h4>
       </div>
-      <div className="mt-5 p-4 bg-gray-200 text-center rounded-md">
-        <p className="font-bold text-lg">📖 Versículo del Día:</p>
-        <p className="italic">{verse}</p>
-        <button
-          onClick={fetchRandomVerse}
-          className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
-          disabled={loadingVerse} // Deshabilita el botón mientras carga
-        >
-          {loadingVerse ? (
-            <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
-            </>
-          ) : (
-            "Actualizar Versículo"
-          )}
-        </button>
-        <button
-          onClick={fetchFullChapter}
-          className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
-          disabled={loadingChapter}
-        >
-          {loadingChapter ? (
-            <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando
-              capítulo...
-            </>
-          ) : (
-            "Mostrar capítulo completo"
-          )}
-        </button>
-
-        {/* Mostrar el capítulo completo si ya fue cargado */}
-        {chapter && (
-          <div
-            className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
-              closeChapter ? "block" : "hidden"
-            }`}
-          >
-            <button
-              className="absolute font-bold top-0 left-0 p-3 underline"
-              onClick={handleCloseChapter}
-            >
-              {closeChapter ? "Ocultar" : "Mostrar"}
-            </button>
-            <p className="font-bold text-lg">
-              📖 {booksDictionary[selectedBook]} {selectedChapter}
-            </p>
-            <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
-          </div>
-        )}
+      <div>
+      <Carousel />
       </div>
+      
       <div className="mt-10">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
@@ -397,49 +230,51 @@ export default function Home() {
           </div>
         </div>
         {loadingPosts ? (
-        <div className="flex justify-center items-center p-e mt-10">
-          <AiOutlineLoading3Quarters className="animate-spin text-xl" />
-       
-        </div>
-      ) : (
-        <ul className="mt-10 space-y-3">
-          {posts.length === 0 ? (
-            <p className="text-gray-500 text-center">No hay publicaciones aún.</p>
-          ) : (
-            posts.map((p) => (
-              <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
-                <div>
-                  <div className="rounded-full flex overflow-hidden w-[35px] h-[35px]">
-                    <Image
-                      width={35}
-                      height={35}
-                      src="/images/avatar.jpeg"
-                      alt="avatar"
-                      className="object-cover rounded-full"
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div>
-                        <p className="text-sm text-gray-500">{p.author}</p>
-                      </div>
+          <div className="flex justify-center items-center p-e mt-10">
+            <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+          </div>
+        ) : (
+          <ul className="mt-10 space-y-3">
+            {posts.length === 0 ? (
+              <p className="text-gray-500 text-center">
+                No hay publicaciones aún.
+              </p>
+            ) : (
+              posts.map((p) => (
+                <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
+                  <div>
+                    <div className="rounded-full flex overflow-hidden w-[35px] h-[35px]">
+                      <Image
+                        width={35}
+                        height={35}
+                        src="/images/avatar.jpeg"
+                        alt="avatar"
+                        className="object-cover rounded-full"
+                      />
                     </div>
-                    <p className="text-sm text-gray-500">{formatDate(p)}</p>
                   </div>
-                  <p className="text-gray-800">{p.contenido}</p>
-                  <div className="flex space-x-2 mt-2">
-                    <HandThumbUpIcon className="w-5 h-5" />
-                    <BookmarkIcon className="w-5 h-5" />
+                  <div className="w-full">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div>
+                          <p className="text-sm text-gray-500">{p.author}</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-500">{formatDate(p)}</p>
+                    </div>
+                    <p className="text-gray-800">{p.contenido}</p>
+                    <div className="flex space-x-2 mt-2">
+                      <HandThumbUpIcon className="w-5 h-5" />
+                      <BookmarkIcon className="w-5 h-5" />
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
-      )}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </div>
     </section>
+
   );
 }
