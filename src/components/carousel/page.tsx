@@ -48,7 +48,7 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-10">
       <Slider {...settings}>
         {modules.map((module, index) => (
           <div key={index} className="w-full relative p-4 rounded-md">
