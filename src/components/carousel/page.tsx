@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useModules } from "@/context/modulesContext";
 import Calculadora from "../Calculadora/page";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleMinus } from "lucide-react";
 
 const Carousel: React.FC = () => {
   const { modules, removeModule } = useModules();
@@ -61,7 +61,7 @@ const Carousel: React.FC = () => {
               onClick={() => removeModule(module)}
         
             >
-              -
+            <CircleMinus />
             </button>
               {module}
               <button
