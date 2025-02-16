@@ -133,7 +133,7 @@ export default function Home() {
       <Carousel />
       </div>
       
-      <div className="mt-10">
+      <div>
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
             <li

@@ -36,46 +36,50 @@ export default function Calculadora() {
   };
 
   return (
-    <div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-[100%]">
-      <h2 className="text-xl font-bold mb-4 text-center">Calculadora</h2>
-      <div className="space-y-2">
-        <input
-          type="number"
-          placeholder="Número 1"
-          value={num1}
-          onChange={(e) => setNum1(e.target.value)}
-          className="w-full p-2 rounded border"
-        />
-        <input
-          type="number"
-          placeholder="Número 2"
-          value={num2}
-          onChange={(e) => setNum2(e.target.value)}
-          className="w-full p-2 rounded border"
-        />
-        <select
-          value={operation}
-          onChange={(e) => setOperation(e.target.value)}
-          className="w-full p-2 rounded border"
-        >
-          <option value="">Selecciona operación</option>
-          <option value="+">+</option>
-          <option value="-">-</option>
-          <option value="*">×</option>
-          <option value="/">÷</option>
-        </select>
-        <button
-          onClick={handleCalculate}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Calcular
-        </button>
-      </div>
-      {result !== "" && (
-        <div className="mt-4 text-center p-2 bg-gray-100 rounded">
-          <strong>Resultado: </strong> {result}
+    <div>
+      {/* Calculadora */}
+      <div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-full max-w-sm mx-auto shadow-md">
+        <h2 className="text-xl font-bold mb-4">Calculadora</h2>
+        <div className="space-y-2">
+          <input
+            type="number"
+            placeholder="Número 1"
+            value={num1}
+            onChange={(e) => setNum1(e.target.value)}
+            className="w-full p-2 rounded border"
+          />
+          <input
+            type="number"
+            placeholder="Número 2"
+            value={num2}
+            onChange={(e) => setNum2(e.target.value)}
+            className="w-full p-2 rounded border"
+          />
+          <select
+            value={operation}
+            onChange={(e) => setOperation(e.target.value)}
+            className="w-full p-2 rounded border"
+          >
+            <option value="">Selecciona operación</option>
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">×</option>
+            <option value="/">÷</option>
+          </select>
+          <button
+            onClick={handleCalculate}
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          >
+            Calcular
+          </button>
         </div>
-      )}
+
+        {result !== "" && (
+          <div className="mt-4 text-center p-2 bg-gray-100 rounded">
+            <strong>Resultado: </strong> {result}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

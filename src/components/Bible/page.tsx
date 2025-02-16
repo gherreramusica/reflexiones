@@ -1,15 +1,17 @@
-'use client';
+"use client";
 import { useEffect, useState, useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 
 export default function Bible() {
   const [verse, setVerse] = useState("Cargando versículo...");
   const [loadingVerse, setLoadingVerse] = useState(true);
-  const [selectedBook, setSelectedBook] = useState(""); 
-  const [selectedChapter, setSelectedChapter] = useState(""); 
+  const [selectedBook, setSelectedBook] = useState("");
+  const [selectedChapter, setSelectedChapter] = useState("");
   const [loadingChapter, setLoadingChapter] = useState(false);
-  const [chapter, setChapter] = useState(""); 
+  const [chapter, setChapter] = useState("");
   const [closeChapter, setCloseChapter] = useState(true);
+
 
   const booksDictionary: { [key: string]: string } = {
     genesis: "Génesis",
@@ -131,54 +133,60 @@ export default function Bible() {
   };
 
   return (
-    <div className=" p-4 bg-gray-200 text-center rounded-md w-[100%]">
-      <p className="font-bold text-lg">📖 Versículo del Día:</p>
-      <p className="italic">{verse}</p>
-      <button
-        onClick={fetchRandomVerse}
-        className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
-        disabled={loadingVerse}
+    <div>
+      
+      <div
+        className={`p-4 bg-gray-200 text-center w-[100%]`}
       >
-        {loadingVerse ? (
-          <>
-            <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
-          </>
-        ) : (
-          "Actualizar Versículo"
-        )}
-      </button>
-      <button
-        onClick={fetchFullChapter}
-        className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
-        disabled={loadingChapter}
-      >
-        {loadingChapter ? (
-          <>
-            <AiOutlineLoading3Quarters className="animate-spin" /> Cargando capítulo...
-          </>
-        ) : (
-          "Mostrar capítulo completo"
-        )}
-      </button>
-
-      {chapter && (
-        <div
-          className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
-            closeChapter ? "block" : "hidden"
-          }`}
+        <p className="font-bold text-lg">📖 Versículo del Día:</p>
+        <p className="italic">{verse}</p>
+        <button
+          onClick={fetchRandomVerse}
+          className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
+          disabled={loadingVerse}
         >
-          <button
-            className="absolute font-bold top-0 left-0 p-3 underline"
-            onClick={handleCloseChapter}
+          {loadingVerse ? (
+            <>
+              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando...
+            </>
+          ) : (
+            "Actualizar Versículo"
+          )}
+        </button>
+        <button
+          onClick={fetchFullChapter}
+          className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
+          disabled={loadingChapter}
+        >
+          {loadingChapter ? (
+            <>
+              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando
+              capítulo...
+            </>
+          ) : (
+            "Mostrar capítulo completo"
+          )}
+        </button>
+
+        {chapter && (
+          <div
+            className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
+              closeChapter ? "block" : "hidden"
+            }`}
           >
-            {closeChapter ? "Ocultar" : "Mostrar"}
-          </button>
-          <p className="font-bold text-lg">
-            📖 {booksDictionary[selectedBook]} {selectedChapter}
-          </p>
-          <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
-        </div>
-      )}
+            <button
+              className="absolute font-bold top-0 left-0 p-3 underline"
+              onClick={handleCloseChapter}
+            >
+              {closeChapter ? "Ocultar" : "Mostrar"}
+            </button>
+            <p className="font-bold text-lg">
+              📖 {booksDictionary[selectedBook]} {selectedChapter}
+            </p>
+            <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
