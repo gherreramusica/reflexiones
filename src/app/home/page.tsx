@@ -9,7 +9,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai"; // 📌 Icono de car
 import { es } from "date-fns/locale";
 import Carousel from "@/components/carousel/page";
 
-
 interface Post {
   _id: string;
   author: string;
@@ -17,6 +16,7 @@ interface Post {
   updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
   contenido: string;
   timestamp: string;
+  likes: number;
 }
 
 export default function Home() {
@@ -119,8 +119,30 @@ export default function Home() {
     }, 1000);
   };
 
-  return (
+  const handleLike = async (postId: string) => {
+    try {
+      const res = await fetch("/api/home", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: postId, like: 1 }), // 👈 Incrementa el like
+      });
 
+      if (res.ok) {
+        const updatedPost = await res.json();
+
+        // Actualizar el estado con los nuevos likes
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId ? { ...post, likes: updatedPost.likes } : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error al dar like:", error);
+    }
+  };
+
+  return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
       <div
         className={`${
@@ -130,9 +152,9 @@ export default function Home() {
         <h4>Mensaje Enviado</h4>
       </div>
       <div>
-      <Carousel />
+        <Carousel />
       </div>
-      
+
       <div>
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
@@ -263,8 +285,12 @@ export default function Home() {
                       <p className="text-sm text-gray-500">{formatDate(p)}</p>
                     </div>
                     <p className="text-gray-800">{p.contenido}</p>
-                    <div className="flex space-x-2 mt-2">
-                      <HandThumbUpIcon className="w-5 h-5" />
+                    <div className="flex space-x-2 mt-2 items-center">
+                      <HandThumbUpIcon
+                        className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
+                        onClick={() => handleLike(p._id)} // 👈 Manejo de likes
+                      />
+                      <span className="text-sm text-gray-600">{p.likes}</span>
                       <BookmarkIcon className="w-5 h-5" />
                     </div>
                   </div>
@@ -275,6 +301,5 @@ export default function Home() {
         )}
       </div>
     </section>
-
   );
 }
