@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { ChevronDown, ChevronUp, MoreVertical } from "lucide-react";
 
 export default function Bible() {
   const [verse, setVerse] = useState("Cargando versículo...");
