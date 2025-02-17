@@ -13,7 +13,11 @@ const poppins = Poppins({
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,7 +77,6 @@ export default function AuthPage() {
         setError("Ocurrió un error desconocido.");
       }
     }
-    
   };
 
   // 🔹 Cerrar Sesión
@@ -84,57 +87,113 @@ export default function AuthPage() {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-around bg-gradient-to-br  ${poppins.variable}`}>
+    <div
+      className={`min-h-screen flex items-center justify-around bg-gradient-to-br  ${poppins.variable}`}
+    >
       <div className="bg-white border-r min-h-screen w-full hidden sm:flex flex flex-col items-center justify-center">
-   
-        <Image width={200}  height={200} alt="Logo" src={"/images/R.png"} ></Image>
-        <p>No todas son malas noticias... son <strong>REFLEXIONES</strong></p>
-        </div>
-      <div className="w-full text-white bg-green-500 min-h-screen flex items-center justify-center">
-      <div className=" p-8 w-[500px] m-auto">
-        {isAuthenticated ? (
-          <>
-            <h2 className="text-3xl font-bold text-center text-white">Bienvenido</h2>
-            <p className="text-center text-gray-600 mt-4">Ya has iniciado sesión.</p>
-            <button onClick={handleLogout} className="w-full py-2 mt-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
-              Cerrar sesión
-            </button>
-          </>
-        ) : (
-          <>
-            <h2 className="text-3xl font-bold text-center text-white">{isLogin ? "Iniciar sesión" : "Registro"}</h2>
-            {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-
-            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-              {!isLogin && (
-                <div>
-                  <label className="block text-sm font-medium text-white">Nombre de usuario</label>
-                  <input type="text" name="username" onChange={handleChange} className="w-full outline-none px-4 py-2 border rounded-md" required />
-                </div>
+        <Image
+          width={200}
+          height={200}
+          alt="Logo"
+          src={"/images/R.png"}
+        ></Image>
+        <p>
+          No todas son malas noticias... son <strong>REFLEXIONES</strong>
+        </p>
+      </div>
+      <div className="w-full text-white bg-yellow-300 min-h-screen flex items-center justify-center">
+        
+        <div className=" p-8 w-[500px] m-auto">
+        <div className="mb-auto flex justify-center"><Image width={100}  height={100} alt="Logo" src={"/images/R.png"} ></Image></div>
+          {isAuthenticated ? (
+            <>
+              <h2 className="text-3xl font-bold text-center text-gray-800">
+                Bienvenido
+              </h2>
+              <p className="text-center text-gray-600 mt-4">
+                Ya has iniciado sesión.
+              </p>
+              <button
+                onClick={handleLogout}
+                className="w-full py-2 mt-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold text-center text-black">
+                {isLogin ? "Iniciar sesión" : "Registro"}
+              </h2>
+              {error && (
+                <p className="text-red-500 text-center mt-2">{error}</p>
               )}
-              <div>
-                <label className="block text-sm font-medium text-white">Correo electrónico</label>
-                <input type="email" name="email" onChange={handleChange} className="w-full outline-none px-4 text-black py-2 border rounded-md" required />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white">Contraseña</label>
-                <input type="password" name="password" onChange={handleChange} className="w-full outline-none text-black px-4 py-2 border rounded-md" required />
-              </div>
-              <button type="submit" className="w-full py-2 bg-black text-white rounded-md transition">
-                {loading ? "Cargando..." : isLogin ? "Iniciar sesión" : "Registrarse"}
-              </button>
-            </form>
 
-            <div className="text-center mt-4">
-              <button onClick={toggleForm} className="text-sm text-black hover:underline">
-                {isLogin ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
-              </button>
-            </div>
-          </>
-        )}
+              <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <div>
+                    <label className="block text-sm font-medium text-black">
+                      Nombre de usuario
+                    </label>
+                    <input
+                      type="text"
+                      name="username"
+                      onChange={handleChange}
+                      className="w-full outline-none px-4 py-2 border rounded-md"
+                      required
+                    />
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm font-medium text-black">
+                    Correo electrónico
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    className="w-full outline-none px-4 text-black py-2 border rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black">
+                    Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    className="w-full outline-none text-black px-4 py-2 border rounded-md"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 bg-black text-white rounded-md transition"
+                >
+                  {loading
+                    ? "Cargando..."
+                    : isLogin
+                    ? "Iniciar sesión"
+                    : "Registrarse"}
+                </button>
+              </form>
+
+              <div className="text-center mt-4">
+                <button
+                  onClick={toggleForm}
+                  className="text-sm text-black hover:underline"
+                >
+                  {isLogin
+                    ? "¿No tienes cuenta? Regístrate"
+                    : "¿Ya tienes cuenta? Inicia sesión"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      </div>
-      
     </div>
   );
 }

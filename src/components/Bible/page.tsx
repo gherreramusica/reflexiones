@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function Bible() {
@@ -10,9 +10,9 @@ export default function Bible() {
   const [loadingChapter, setLoadingChapter] = useState(false);
   const [chapter, setChapter] = useState("");
   const [closeChapter, setCloseChapter] = useState(true);
-
-
-  const booksDictionary: { [key: string]: string } = {
+  
+  // 🔹 Memoriza el diccionario para evitar recreaciones innecesarias
+  const booksDictionary = useMemo(() => ({
     genesis: "Génesis",
     exodo: "Éxodo",
     levitico: "Levítico",
@@ -36,16 +36,16 @@ export default function Bible() {
     efesios: "Efesios",
     hebreos: "Hebreos",
     apocalipsis: "Apocalipsis",
-  };
+  }), []);
 
-  // 🔹 Usamos useCallback para memorizar la función y evitar recreaciones
+  // 🔹 Memoriza la función para evitar recreaciones innecesarias
   const fetchRandomVerse = useCallback(async () => {
     try {
       setLoadingVerse(true);
       setChapter("");
 
       const books = Object.keys(booksDictionary);
-      const randomBookKey = books[Math.floor(Math.random() * books.length)];
+      const randomBookKey = books[Math.floor(Math.random() * books.length)] as keyof typeof booksDictionary;
       const randomBookName = booksDictionary[randomBookKey];
 
       const randomChapter = Math.floor(Math.random() * 10) + 1;
@@ -79,13 +79,22 @@ export default function Bible() {
       setLoadingVerse(false);
     }
   }, [booksDictionary]);
+  // 🔹 Prevención de múltiples llamadas en `useEffect`
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    fetchRandomVerse();
-  }, [fetchRandomVerse]); // 🔹 Ahora React no mostrará advertencias
+    if (!hasFetched.current) {
+      fetchRandomVerse();
+      hasFetched.current = true;
+    }
+  }, [fetchRandomVerse]);
 
+  // 🔹 Obtiene el capítulo completo
   const fetchFullChapter = async () => {
-    if (!selectedBook || !selectedChapter) return;
+    if (!selectedBook || !selectedChapter) {
+      alert("Selecciona primero un libro y un capítulo.");
+      return;
+    }
     setCloseChapter(true);
 
     try {
@@ -93,7 +102,7 @@ export default function Bible() {
       setChapter("");
 
       console.log(
-        `📖 Cargando capítulo completo: ${booksDictionary[selectedBook]} ${selectedChapter}`
+        `📖 Cargando capítulo completo: ${booksDictionary[selectedBook as keyof typeof booksDictionary]} ${selectedChapter}`
       );
 
       const res = await fetch(
@@ -126,19 +135,16 @@ export default function Bible() {
       setLoadingChapter(false);
     }
   };
-
   const handleCloseChapter = () => {
     setCloseChapter(!closeChapter);
   };
 
   return (
     <div>
-      
-      <div
-        className={`p-4 bg-gray-200 text-center w-[100%]`}
-      >
+      <div className="p-4 bg-gray-200 text-center w-[100%]">
         <p className="font-bold text-lg">📖 Versículo del Día:</p>
         <p className="italic">{verse}</p>
+        
         <button
           onClick={fetchRandomVerse}
           className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
@@ -152,15 +158,15 @@ export default function Bible() {
             "Actualizar Versículo"
           )}
         </button>
+
         <button
           onClick={fetchFullChapter}
           className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
-          disabled={loadingChapter}
+          disabled={loadingChapter || !selectedBook || !selectedChapter} // ✅ Evita llamadas innecesarias
         >
           {loadingChapter ? (
             <>
-              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando
-              capítulo...
+              <AiOutlineLoading3Quarters className="animate-spin" /> Cargando capítulo...
             </>
           ) : (
             "Mostrar capítulo completo"
@@ -168,11 +174,7 @@ export default function Bible() {
         </button>
 
         {chapter && (
-          <div
-            className={`mt-5 p-4 bg-gray-100 relative rounded-md ${
-              closeChapter ? "block" : "hidden"
-            }`}
-          >
+          <div className={`mt-5 p-4 bg-gray-100 relative rounded-md ${closeChapter ? "block" : "hidden"}`}>
             <button
               className="absolute font-bold top-0 left-0 p-3 underline"
               onClick={handleCloseChapter}
@@ -180,7 +182,7 @@ export default function Bible() {
               {closeChapter ? "Ocultar" : "Mostrar"}
             </button>
             <p className="font-bold text-lg">
-              📖 {booksDictionary[selectedBook]} {selectedChapter}
+              📖 {booksDictionary[selectedBook as keyof typeof booksDictionary]} {selectedChapter}
             </p>
             <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
           </div>

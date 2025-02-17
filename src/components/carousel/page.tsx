@@ -55,7 +55,7 @@ const Carousel: React.FC = () => {
             
 
             {/* Module Header with Toggle */}
-            <div className="flex justify-between items-center bg-green-500 text-white text-center font-bold p-2">
+            <div className="flex justify-between items-center rounded-lg bg-green-500 text-white text-center font-bold p-2">
               {/* Remove Module Button */}
             <button
               onClick={() => removeModule(module)}
