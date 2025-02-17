@@ -38,7 +38,7 @@ export default function Calculadora() {
   return (
     <div>
       {/* Calculadora */}
-      <div className="mt-5 p-4 bg-gray-200 text-center rounded-md w-full max-w-sm mx-auto shadow-md">
+      <div className=" p-4 bg-gray-200 text-center w-full  mx-auto ">
         <h2 className="text-xl font-bold mb-4">Calculadora</h2>
         <div className="space-y-2">
           <input

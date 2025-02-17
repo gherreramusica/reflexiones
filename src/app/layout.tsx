@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Poppins } from 'next/font/google'
+import { Poppins } from "next/font/google";
 import { ModulesProvider } from "@/context/modulesContext";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'], // Ajusta los pesos según lo que necesites
-  variable: '--font-poppins', // Define una variable CSS para usarla en Tailwind
-})
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"], 
+  variable: "--font-poppins", 
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,14 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={poppins.variable} >
-      <body
-        className={poppins.variable}
-      >
+    <html lang="en">
+      <body className={`${poppins.variable} font-sans`}>
         <ModulesProvider>
-        {children}
+          {children}
         </ModulesProvider>
-       
       </body>
     </html>
   );
