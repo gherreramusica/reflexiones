@@ -141,7 +141,7 @@ export default function Bible() {
 
   return (
     <div>
-      <div className="p-4 bg-gray-200 text-center w-[100%]">
+      <div className="p-4 rounded-b-lg bg-gray-200 text-center w-[100%]">
         <p className="font-bold text-lg">📖 Versículo del Día:</p>
         <p className="italic">{verse}</p>
         
@@ -174,7 +174,7 @@ export default function Bible() {
         </button>
 
         {chapter && (
-          <div className={`mt-5 p-4 bg-gray-100 relative rounded-md ${closeChapter ? "block" : "hidden"}`}>
+          <div className={`mt-5 p-4 bg-gray-100 relative rounded-b-lg ${closeChapter ? "block" : "hidden"}`}>
             <button
               className="absolute font-bold top-0 left-0 p-3 underline"
               onClick={handleCloseChapter}
