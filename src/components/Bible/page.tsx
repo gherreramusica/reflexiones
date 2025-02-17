@@ -78,7 +78,7 @@ export default function Bible() {
     } finally {
       setLoadingVerse(false);
     }
-  }, []);
+  }, [booksDictionary]);
 
   useEffect(() => {
     fetchRandomVerse();
