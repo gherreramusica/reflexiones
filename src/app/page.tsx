@@ -92,8 +92,8 @@ export default function AuthPage() {
     >
       <div className="bg-green-500 min-h-screen w-full hidden sm:flex flex flex-col items-center justify-center">
        
-        <h2 className="text-white text-6xl w-[90%] font-bold text-left p-4 leading-[1.2]">
-          No todas son malas noticias... son <strong className="text-black">REFLEXIONES</strong>
+        <h2 className="text-white text-6xl w-[80%] font-bold text-left p-4 leading-[1.2]">
+          Empieza a compartir con el mundo tus <strong className="text-black">REFLEXIONES</strong>
         </h2>
       </div>
       <div className="w-full text-white bg-yellow-300 min-h-screen flex items-center justify-center">
