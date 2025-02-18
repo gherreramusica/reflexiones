@@ -172,6 +172,25 @@ export default function Home() {
     }
   };
 
+  const handleDeletePost = async (postId: string) => {
+    try {
+      const res = await fetch(`/api/home/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        // Remove post from state
+        setPosts((prevPosts) =>
+          prevPosts.filter((post) => post._id !== postId)
+        );
+        // Close the menu
+        setSelectedPostId(null);
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
       <div
@@ -323,24 +342,51 @@ export default function Home() {
                         />
                         {selectedPostId === p._id && (
                           <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                            <button
-                              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                              onClick={() => {
-                                console.log(`Eliminar post ${p._id}`);
-                              }}
-                            >
-                              Eliminar
-                            </button>
-                            <button
-                              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                              onClick={() => {
-                                console.log(`Guardar post ${p._id}`);
-                              }}
-                            >
-                              Guardar
-                            </button>
+                            {p.author._id === user?.id ? (
+                              <>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => handleDeletePost(p._id)}
+                                >
+                                  Eliminar
+                                </button>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => handleDeletePost(p._id)}
+                                >
+                                  Guardar
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => {
+                                    const updatedPosts = posts.filter(
+                                      (post) => post._id !== p._id
+                                    );
+                                    setPosts(updatedPosts);
+                                    setSelectedPostId(null);
+                                  }}
+                                >
+                                  Ocultar
+                                </button>{" "}
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => console.log("Mostrar Menos")}
+                                >
+                                  Mostrar menos
+                                </button>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => console.log("Reportar")}
+                                >
+                                  Reportar
+                                </button>
+                              </>
+                            )}
                           </div>
-                        )}
+                        )}{" "}
                       </div>
                     </div>
                     <p className="text-gray-600">{p.contenido}</p>
