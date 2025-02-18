@@ -5,40 +5,93 @@ import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
-import { AiOutlineLoading3Quarters } from "react-icons/ai"; // 📌 Icono de carga
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { es } from "date-fns/locale";
 import Carousel from "@/components/carousel/page";
+import { useAuth } from "@/hooks/useAuth";
+import { MoreHorizontal } from "lucide-react";
 
 interface Post {
   _id: string;
-  author: string;
-  createdAt: string; // ✅ Agregar createdAt (MongoDB lo envía como string)
-  updatedAt: string; // ✅ Agregar updatedAt si lo necesitas
+  author: {
+    _id: string;
+    username: string;
+    email: string;
+  };
+  createdAt: string;
+  updatedAt: string;
   contenido: string;
   timestamp: string;
   likes: number;
 }
 
 export default function Home() {
+  const { user, isAuthenticated } = useAuth();
   const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
-
-  const pathname = usePathname(); // Obtener la ruta actual
-
+  const pathname = usePathname();
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  const handleMenuClick = (postId: string) => {
+    setSelectedPostId(selectedPostId === postId ? null : postId);
+  };
+
+  const handleSubmit = async () => {
+    console.log("Estado de autenticación:", isAuthenticated);
+    console.log("Usuario autenticado:", user);
+
+    console.log("User data:", user); // Check user data
+    if (content.trim() === "" || !user) {
+      console.log("No content or user"); // Check if this condition triggers
+      return;
+    }
+
+    const newPost = {
+      author: {
+        _id: user.id,
+        username: user.name,
+        email: user.email,
+      },
+      contenido: content,
+    };
+
+    console.log("Sending post data:", newPost); // Check post data structure
+
+    try {
+      const res = await fetch("/api/home", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPost),
+      });
+
+      console.log("Response status:", res.status); // Check response status
+      const responseData = await res.json();
+      console.log("Response data:", responseData); // Check response data
+
+      if (res.ok) {
+        setPosts((prevPosts) => [responseData, ...prevPosts]);
+        setContent("");
+        showInput(false);
+        setSuccessMessage(true);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoadingPosts(true); // Activa el loading cuando se inicie la carga
+      setLoadingPosts(true);
       try {
         const res = await fetch("/api/home");
         const data = await res.json();
+        console.log("Posts data:", data);
 
         console.log("Datos antes de ordenar:", data);
 
-        // Ordena los posts por fecha más reciente primero
         const sortedPosts = data.sort(
           (
             a: { createdAt?: string; timestamp?: string },
@@ -56,7 +109,7 @@ export default function Home() {
       } catch (error) {
         console.error("Error fetching posts", error);
       } finally {
-        setLoadingPosts(false); // Desactiva el loading cuando la carga haya terminado
+        setLoadingPosts(false);
       }
     };
 
@@ -64,18 +117,16 @@ export default function Home() {
   }, []);
 
   const formatDate = (post: Post) => {
-    const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
+    const dateString = post.createdAt || post.timestamp;
 
-    if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
+    if (!dateString) return "Fecha desconocida";
 
     let parsedDate = new Date(dateString);
 
-    // Si `dateString` no es válido, intenta parsearlo
     if (isNaN(parsedDate.getTime())) {
       parsedDate = new Date(Date.parse(dateString));
     }
 
-    // Si sigue sin ser una fecha válida, muestra error
     if (isNaN(parsedDate.getTime())) {
       console.error("Error al convertir la fecha:", dateString);
       return "Fecha inválida";
@@ -96,41 +147,19 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (content.trim() === "") return;
-
-    const newPost = { author: "Martin Herrera", contenido: content };
-
-    const res = await fetch("/api/home", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newPost),
-    });
-
-    if (res.ok) {
-      const savedPost = await res.json();
-      setPosts((prevPosts) => [savedPost, ...prevPosts]); // Agregar al estado
-      setContent("");
-      showInput(false);
-    }
-    setSuccessMessage(true);
-    setTimeout(() => {
-      setSuccessMessage(false);
-    }, 1000);
-  };
+  // Update handleSubmit to include the correct author structure
 
   const handleLike = async (postId: string) => {
     try {
       const res = await fetch("/api/home", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: postId, like: 1 }), // 👈 Incrementa el like
+        body: JSON.stringify({ id: postId, like: 1 }),
       });
 
       if (res.ok) {
         const updatedPost = await res.json();
 
-        // Actualizar el estado con los nuevos likes
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId ? { ...post, likes: updatedPost.likes } : post
@@ -154,11 +183,10 @@ export default function Home() {
       <div>
         <Carousel />
       </div>
-
       <div>
         <ul className="flex gap-3 justify-center">
-          <Link href="/home">
-            <li
+  <Link href="/home">
+    <li
               className={`bg-gray-100 p-2 rounded-md ${
                 pathname === "/home" ? "border font-bold" : ""
               }`}
@@ -236,7 +264,7 @@ export default function Home() {
         </div>
         <div className="mt-10">
           <div
-            className="bg-white flex items-center gap-4 text-gray-500 p-5 shadow-md border cursor-pointer min-w-[330px] rounded-md"
+            className="bg-white flex items-center gap-4 text-gray-500 p-4 shadow-md border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
           >
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
@@ -264,31 +292,50 @@ export default function Home() {
             ) : (
               posts.map((p) => (
                 <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
-                  <div>
-                    <div className="rounded-full flex overflow-hidden w-[35px] h-[35px]">
-                      <Image
-                        width={35}
-                        height={35}
-                        src="/images/avatar.jpeg"
-                        alt="avatar"
-                        className="object-cover rounded-full"
-                      />
-                    </div>
-                  </div>
                   <div className="w-full">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div>
-                          <p className="text-sm text-gray-500">{p.author}</p>
-                        </div>
+                    <div className="flex space-x-3 relative justify-between items-center">
+                      <div className="flex space-x-3 items-center">
+                        <p className="text-sm text-gray-700">
+                          {typeof p.author === "string" ? p.author : p.author?.username}
+                        </p>
+                        <p className="text-sm text-gray-400">{formatDate(p)}</p>
                       </div>
-                      <p className="text-sm text-gray-500">{formatDate(p)}</p>
+                      {/* Icono de opciones con menú desplegable */}
+                      <div className="relative">
+                        <MoreHorizontal
+                          className="w-4 h-4 text-gray-400 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMenuClick(p._id);
+                          }}
+                        />
+                        {selectedPostId === p._id && (
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <button
+                              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                              onClick={() => {
+                                console.log(`Eliminar post ${p._id}`);
+                              }}
+                            >
+                              Eliminar
+                            </button>
+                            <button
+                              className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                              onClick={() => {
+                                console.log(`Guardar post ${p._id}`);
+                              }}
+                            >
+                              Guardar
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-gray-800">{p.contenido}</p>
+                    <p className="text-gray-600">{p.contenido}</p>
                     <div className="flex space-x-2 mt-2 items-center">
                       <HandThumbUpIcon
                         className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
-                        onClick={() => handleLike(p._id)} // 👈 Manejo de likes
+                        onClick={() => handleLike(p._id)}
                       />
                       <span className="text-sm text-gray-600">{p.likes}</span>
                       <BookmarkIcon className="w-5 h-5" />
@@ -296,6 +343,7 @@ export default function Home() {
                   </div>
                 </li>
               ))
+              
             )}
           </ul>
         )}

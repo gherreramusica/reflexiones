@@ -5,7 +5,7 @@ import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { Bars3Icon, UserIcon } from "@heroicons/react/24/outline"; // Importar los íconos de Heroicons
 import Sidebar from "@/components/sidebar/sidebar/page";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth'
 
 const poppins = Poppins({
   subsets: ["latin"],

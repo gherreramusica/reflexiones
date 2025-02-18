@@ -33,7 +33,11 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json({
       message: "Inicio de sesión exitoso",
-      user: { username: user.username, email: user.email },
+      user: {
+        id: user._id,
+        name: user.username,
+        email: user.email
+      }
     });
 
     // Guardar token en cookies HTTP con seguridad
