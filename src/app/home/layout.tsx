@@ -24,20 +24,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-interface Post {
-  _id: string;
-  author: {
-    _id: string;
-    username: string;
-    email: string;
-    avatar: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  contenido: string;
-  timestamp: string;
-  likes: number;
-}
+
 
 export default function HomeLayout({ children }: LayoutProps) {
   const [sideBar, showSidebar] = useState(false);
