@@ -6,7 +6,7 @@ import User from "@/models/User";
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get("token");
 
     console.log("🔍 Token recibido:", token);
@@ -16,7 +16,7 @@ export async function GET() {
       return NextResponse.json({ authenticated: false });
     }
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
     console.log("✅ Token decodificado:", decoded);
 
     await connectDB();
