@@ -311,7 +311,7 @@ export default function Home() {
               </p>
             ) : (
               posts.map((p) => (
-                <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
+                <li key={p._id} className="border-b flex gap-2 py-4 px-0 bg-white">
                   <div>
                     <Image
                       width={30}
