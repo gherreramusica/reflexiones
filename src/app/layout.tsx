@@ -1,5 +1,5 @@
 "use client";
-import type { Metadata } from "next";
+
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { ModulesProvider } from "@/context/modulesContext";
