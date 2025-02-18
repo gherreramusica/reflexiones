@@ -1,14 +1,14 @@
 import { connectDB } from "@/lib/mongodb";
 import Note from "@/models/Note";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request
 ) {
   try {
+    const id = request.url.split('/').pop();
     await connectDB();
-    const deletedNote = await Note.findByIdAndDelete(params.id);
+    const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
       return NextResponse.json(
