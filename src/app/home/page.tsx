@@ -17,6 +17,7 @@ interface Post {
     _id: string;
     username: string;
     email: string;
+    avatar: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -185,8 +186,8 @@ export default function Home() {
       </div>
       <div>
         <ul className="flex gap-3 justify-center">
-  <Link href="/home">
-    <li
+          <Link href="/home">
+            <li
               className={`bg-gray-100 p-2 rounded-md ${
                 pathname === "/home" ? "border font-bold" : ""
               }`}
@@ -292,11 +293,22 @@ export default function Home() {
             ) : (
               posts.map((p) => (
                 <li key={p._id} className="border-b flex gap-2 p-4 bg-white">
+                  <div>
+                    <Image
+                      width={30}
+                      height={30}
+                      src={p.author.avatar || "/images/avatar.png"} // Use author's avatar with fallback
+                      alt={`${p.author.username}'s avatar`}
+                      className="object-cover rounded-full"
+                    />
+                  </div>
                   <div className="w-full">
                     <div className="flex space-x-3 relative justify-between items-center">
                       <div className="flex space-x-3 items-center">
                         <p className="text-sm text-gray-700">
-                          {typeof p.author === "string" ? p.author : p.author?.username}
+                          {typeof p.author === "string"
+                            ? p.author
+                            : p.author?.username}
                         </p>
                         <p className="text-sm text-gray-400">{formatDate(p)}</p>
                       </div>
@@ -343,7 +355,6 @@ export default function Home() {
                   </div>
                 </li>
               ))
-              
             )}
           </ul>
         )}

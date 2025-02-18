@@ -3,9 +3,16 @@
 import { ReactNode, useState } from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
-import { Bars3Icon, UserIcon } from "@heroicons/react/24/outline"; // Importar los íconos de Heroicons
+import {
+  Bars3Icon,
+  UserIcon,
+  Cog6ToothIcon,
+  QuestionMarkCircleIcon,
+  ArrowRightOnRectangleIcon,
+} from "@heroicons/react/24/outline"; // Importar los íconos de Heroicons
 import Sidebar from "@/components/sidebar/sidebar/page";
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -15,6 +22,21 @@ const poppins = Poppins({
 
 interface LayoutProps {
   children: ReactNode;
+}
+
+interface Post {
+  _id: string;
+  author: {
+    _id: string;
+    username: string;
+    email: string;
+    avatar: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  contenido: string;
+  timestamp: string;
+  likes: number;
 }
 
 export default function HomeLayout({ children }: LayoutProps) {
@@ -32,47 +54,67 @@ export default function HomeLayout({ children }: LayoutProps) {
 
       {/* Header principal */}
       <header className="p-3 sticky top-0 z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
-      {/* Menú Hamburguesa */}
-      <div className="flex items-center">
-        <button className="text-lg" onClick={handleMenu}>
-          <Bars3Icon className="w-6 h-6" />
-        </button>
-      </div>
+        {/* Menú Hamburguesa */}
+        <div className="flex items-center">
+          <button className="text-lg" onClick={handleMenu}>
+            <Bars3Icon className="w-6 h-6" />
+          </button>
+        </div>
 
-      {/* Logo */}
-      <div className="relative w-fit">
-        <Link href="/home">
-          <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400">
-            R
-          </h1>
-        </Link>
-      </div>
-
-      {/* Icono del Usuario + Menú de Cerrar Sesión */}
-      <div className="relative flex items-center">
-        {isAuthenticated ? (
-          <div className="relative group">
-            <button className="flex items-center gap-2">
-              <UserIcon className="w-6 h-6 text-gray-700" />
-            </button>
-
-            {/* Dropdown para cerrar sesión */}
-            <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button
-                onClick={logout}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
-        ) : (
-          <Link href="/">
-            <UserIcon className="w-6 h-6 text-gray-700" />
+        {/* Logo */}
+        <div className="relative w-fit">
+          <Link href="/home">
+            <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400">
+              R
+            </h1>
           </Link>
-        )}
-      </div>
-    </header>
+        </div>
+
+        {/* Icono del Usuario + Menú de Cerrar Sesión */}
+        <div className="relative flex items-center">
+          {isAuthenticated ? (
+            <div className="relative group">
+              <button className="flex items-center gap-2">
+                <Image
+                  width={30}
+                  height={30}
+                  src={"/images/avatar.png"} // Use author's avatar with fallback
+                  alt={"Avatar"}
+                  className="object-cover rounded-full"
+                />
+              </button>
+              {/* Dropdown para cerrar sesión */}
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="flex items-center gap-2 px-4 py-2 border-b">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                    <UserIcon className="w-5 h-5 text-gray-600" />
+                  </div>
+                  <span className="text-sm text-gray-700">Usuario</span>
+                </div>
+                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2">
+                  <Cog6ToothIcon className="w-4 h-4" />
+                  Configuración
+                </button>
+                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2">
+                  <QuestionMarkCircleIcon className="w-4 h-4" />
+                  Ayuda
+                </button>
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2"
+                >
+                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                  Cerrar sesión
+                </button>
+              </div>{" "}
+            </div>
+          ) : (
+            <Link href="/">
+              <UserIcon className="w-6 h-6 text-gray-700" />
+            </Link>
+          )}
+        </div>
+      </header>
 
       <div
         className={`fixed top-10 left-0 z-50 w-[100%] h-full bg-gray-800 text-white transition-all duration-300 ease-in-out transform ${
