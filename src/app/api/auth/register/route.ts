@@ -6,9 +6,9 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { username, email, password, avatar } = await req.json();
+    const { name, username, email, password, avatar } = await req.json();
 
-    if (!username || !email || !password) {
+    if (!name || !username || !email || !password) {
       return NextResponse.json({ error: "Todos los campos son obligatorios" }, { status: 400 });
     }
 
@@ -18,7 +18,9 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("User data before save:", { name, username, email });
     const newUser = new User({ 
+      name,
       username, 
       email, 
       password: hashedPassword,

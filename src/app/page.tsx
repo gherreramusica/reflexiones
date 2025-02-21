@@ -17,9 +17,11 @@ export default function AuthPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
+    name: "",
     username: "",
     email: "",
     password: "",
+    // Added name field
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(""); // Add success state
@@ -63,13 +65,12 @@ export default function AuthPage() {
         setSuccess(data.message);
         setTimeout(() => {
           setIsLogin(true);
-          setFormData({ username: "", email: "", password: "" });
+          setFormData({ username: "", email: "", password: "", name: "" });
         }, 2000);
       } else {
         // If login successful, redirect to home
         router.push("/home");
       }
-
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
@@ -80,12 +81,12 @@ export default function AuthPage() {
     <div
       className={`min-h-screen flex items-center justify-around bg-gradient-to-br  ${poppins.variable}`}
     >
-      <div className="bg-green-500 min-h-screen w-full hidden sm:flex flex flex-col items-center justify-center">
+      <div className="bg-black min-h-screen w-full hidden sm:flex flex flex-col items-center justify-center">
         <h2 className="text-white text-8xl w-[80%] font-bold text-left p-4 leading-[1.0]">
-          BUENAS <br /> <strong className="text-black">NOTICIAS</strong>
+          TODOS <br /> <strong className="text-gray-500">UNIDOS</strong>
         </h2>
       </div>
-      <div className="w-full text-white bg-yellow-300 min-h-screen flex items-center justify-center">
+      <div className="w-full text-white bg-white min-h-screen flex items-center justify-center">
         <div className="p-8 w-[500px] m-auto">
           <div className="mb-auto flex justify-center">
             <Image
@@ -99,22 +100,39 @@ export default function AuthPage() {
             {isLogin ? "Iniciar sesión" : "Registro"}
           </h2>
           {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-          {success && <p className="text-green-500 text-center mt-2">{success}</p>}
+          {success && (
+            <p className="text-green-500 text-center mt-2">{success}</p>
+          )}
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-black">
-                  Nombre de usuario
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  onChange={handleChange}
-                  className="w-full outline-none px-4 py-2 border text-black rounded-md"
-                  required
-                />
-              </div>
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-black">
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    onChange={handleChange}
+                    className="w-full outline-none px-4 py-2 border text-black rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black">
+                    Nombre de usuario
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    maxLength={14}
+                    onChange={handleChange}
+                    className="w-full outline-none px-4 py-2 border text-black rounded-md"
+                    required
+                  />
+                </div>
+              </>
             )}
             <div>
               <label className="block text-sm font-medium text-black">

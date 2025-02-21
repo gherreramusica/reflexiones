@@ -32,8 +32,11 @@ export async function GET() {
       authenticated: true,
       user: {
         id: user._id,
-        name: user.username,
-        email: user.email
+        name: user.name, // Cambiado de user.username a user.name
+        email: user.email,
+        avatar: user.avatar,
+        username: user.username,
+        bio: user.bio
       }
     });
   } catch (error) {

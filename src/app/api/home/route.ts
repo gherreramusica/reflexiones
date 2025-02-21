@@ -5,7 +5,12 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await connectDB();
-    const notes = await Note.find().sort({ createdAt: -1 });
+    const notes = await Note.find()
+      .populate("author", "name username email avatar")
+      .sort({ createdAt: -1 });
+
+    console.log("📢 Datos enviados desde la API:", JSON.stringify(notes, null, 2));
+
     return NextResponse.json(notes);
   } catch (error) {
     console.error("❌ Error en GET:", error);
@@ -16,30 +21,31 @@ export async function GET() {
   }
 }
 
+
 export async function POST(req: Request) {
   try {
     await connectDB();
     const { author, contenido } = await req.json();
 
-    if (!author?.username || !author?.email || !contenido) {
+    if (!author || !contenido) {
       return NextResponse.json(
-        { error: "Faltan datos: Se requiere información completa del autor y contenido" },
+        { error: "Faltan datos: Se requiere el ID del autor y el contenido" },
         { status: 400 }
       );
     }
 
     const newNote = new Note({
-      author: {
-        _id: author._id,
-        username: author.username,
-        email: author.email
-      },
+      author, // 🔥 Guardamos el ID directamente
       contenido,
       likes: 0
     });
 
-    await newNote.save();
-    return NextResponse.json(newNote, { status: 201 });
+    const savedNote = await newNote.save();
+
+    // 🔥 Recuperamos la nota con populate() para traer el nombre del usuario
+    const populatedNote = await Note.findById(savedNote._id).populate("author", "name username email avatar");
+
+    return NextResponse.json(populatedNote, { status: 201 });
   } catch (error) {
     console.error("❌ Error en POST:", error);
     return NextResponse.json(
@@ -48,6 +54,8 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
 
 export async function PATCH(req: Request) {
   try {
@@ -81,4 +89,23 @@ export async function PATCH(req: Request) {
   }
 }
 
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const deletedNote = await Note.findByIdAndDelete(params.id);
+    
+    if (!deletedNote) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
 
+    return NextResponse.json({ message: "Post deleted successfully" });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error deleting post" },
+      { status: 500 }
+    );
+  }
+}

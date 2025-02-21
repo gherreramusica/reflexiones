@@ -7,7 +7,38 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useModules } from "@/context/modulesContext";
 import Calculadora from "../Calculadora/page";
-import { ChevronDown, ChevronUp, CircleMinus } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleMinus, ChevronLeft, ChevronRight } from "lucide-react";
+
+
+interface ArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
+const NextArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
+  return (
+    <div
+      className={`${className} custom-next-arrow`}
+      style={{ ...style }}
+      onClick={onClick}
+    >
+      <ChevronRight size={24} />
+    </div>
+  );
+};
+
+const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
+  return (
+    <div
+      className={`${className} custom-prev-arrow`}
+      style={{ ...style }}
+      onClick={onClick}
+    >
+      <ChevronLeft size={24} />
+    </div>
+  );
+};
 
 const Carousel: React.FC = () => {
   const { modules, removeModule } = useModules();
@@ -42,15 +73,17 @@ const Carousel: React.FC = () => {
   };
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   return (
-    <div className="w-full mb-10">
+    <div className="w-full">
       <Slider {...settings}>
         {modules.map((module, index) => (
           <div key={index} className="w-full relative p-4">

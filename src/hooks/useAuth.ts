@@ -5,6 +5,10 @@ interface User {
   id: string;
   name: string;
   email: string;
+  avatar?: string;
+  username: string; // Asegúrate de que esta propiedad esté incluida
+  bio?: string;
+  
 }
 
 export const useAuth = () => {
@@ -17,13 +21,17 @@ export const useAuth = () => {
       try {
         const res = await fetch("/api/auth/check", { credentials: "include" });
         const data = await res.json();
+        console.log("Respuesta de la API:", data);
         
         if (data.authenticated && data.user) {
           setIsAuthenticated(true);
           setUser({
             id: data.user.id,
             name: data.user.name,
-            email: data.user.email
+            email: data.user.email,
+            avatar: data.user.avatar,
+            username: data.user.username,
+            bio: data.user.bio
           });
         }
       } catch (error) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useAuth } from "@/hooks/useAuth";
 import StarterKit from "@tiptap/starter-kit";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
@@ -8,15 +9,16 @@ import Underline from "@tiptap/extension-underline";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image"; // Importar extensión de imagen
 import { ArrowLeft } from "lucide-react"; // Importar icono de back
 import { useState } from "react";
-import { Bold as BoldIcon, Italic as ItalicIcon, Underline as UnderlineIcon, List, ListOrdered, Link as LinkIcon } from "lucide-react"; // Importar iconos
+import { Bold as BoldIcon, Italic as ItalicIcon, Underline as UnderlineIcon, List, ListOrdered, Link as LinkIcon, Image as ImageIcon } from "lucide-react"; // Importar iconos
 import Placeholder from "@tiptap/extension-placeholder"; // Importar extensión
 
-
-
 const TiptapEditor = () => {
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
+  const [image, setImage] = useState<string | null>(null);
   const editor = useEditor({
     extensions: [
       StarterKit, // NO eliminamos paragraph para evitar errores
@@ -26,6 +28,7 @@ const TiptapEditor = () => {
       BulletList,
       OrderedList,
       Link,
+      Image, // Agregar extensión de imagen
       Placeholder.configure({
         placeholder: "Escribe tu reflexión aquí...",
         showOnlyWhenEditable: true,
@@ -38,7 +41,6 @@ const TiptapEditor = () => {
       },
     },
   });
-  
 
   const savePost = async () => {
     if (!editor || !title) {
@@ -46,7 +48,13 @@ const TiptapEditor = () => {
       return;
     }
 
-    const content = editor.getText(); // Obtiene solo el texto sin etiquetas HTML
+    const content = editor.getHTML(); // Get HTML content
+    const author = user?.id; // Ensure you have the user ID
+
+    if (!author) {
+      alert("User is not logged in");
+      return;
+    }
 
     try {
       const response = await fetch("/api/posts", {
@@ -54,18 +62,48 @@ const TiptapEditor = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ author, title, content, image }), // 🔹 Include author
       });
 
       if (response.ok) {
         alert("Post saved successfully!");
         setTitle("");
         editor.commands.setContent("");
-        window.location.href = "/blog"; // Redireccionar después de guardar
+        window.location.href = "/blog"; // Redirect after saving
       } else {
         const error = await response.json();
         console.error("Failed to save post:", error);
         alert("Error saving the post: " + error.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to connect to the server.");
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const imageUrl = data.url; // Asegúrate de que la respuesta contenga la URL de la imagen
+        if (editor) {
+          editor.chain().focus().setImage({ src: imageUrl }).run();
+        }
+        setImage(imageUrl);
+      } else {
+        console.error("Failed to upload image");
+        alert("Error uploading the image");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -83,15 +121,15 @@ const TiptapEditor = () => {
         <div>
           <ul className="flex justify-between items-center">
             <li className="flex gap-2 items-center">
-            <button 
-              onClick={() => window.history.back()} 
-              className="p-2 rounded-md hover:bg-gray-200 transition"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400 before:text-blue-500">
-              R
-            </h1>
+              <button 
+                onClick={() => window.history.back()} 
+                className="p-2 rounded-md hover:bg-gray-200 transition"
+              >
+                <ArrowLeft className="w-6 h-6 text-gray-700" />
+              </button>
+              <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400 before:text-blue-500">
+                R
+              </h1>
             </li>
             <li>
               {/* Botón para guardar */}
@@ -166,6 +204,18 @@ const TiptapEditor = () => {
           >
             <LinkIcon className="w-5 h-5 text-gray-700" />
           </button>
+
+          {/* Botón para subir imágenes */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+            id="upload-image"
+          />
+          <label htmlFor="upload-image" className="p-2 rounded hover:bg-gray-200 cursor-pointer">
+            <ImageIcon className="w-5 h-5 text-gray-700" />
+          </label>
         </div>
 
         {/* Campo para el título */}

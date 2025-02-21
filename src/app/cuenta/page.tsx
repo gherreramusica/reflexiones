@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -14,7 +14,6 @@ import { MoreHorizontal } from "lucide-react";
 interface Post {
   _id: string;
   author: {
-    name: string;
     _id: string;
     username: string;
     email: string;
@@ -27,7 +26,7 @@ interface Post {
   likes: number;
 }
 
-export default function Home() {
+export default function UserPage() {
   const { user, isAuthenticated } = useAuth();
   const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
@@ -36,13 +35,6 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const [avatar, setAvatar] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (user) {
-      setAvatar(user.avatar || "/images/avatar.png");
-    }
-  }, [user]);
 
   const handleMenuClick = (postId: string) => {
     setSelectedPostId(selectedPostId === postId ? null : postId);
@@ -52,17 +44,22 @@ export default function Home() {
     console.log("Estado de autenticación:", isAuthenticated);
     console.log("Usuario autenticado:", user);
 
+    console.log("User data:", user); // Check user data
     if (content.trim() === "" || !user) {
-      console.log("No content or user");
+      console.log("No content or user"); // Check if this condition triggers
       return;
     }
 
     const newPost = {
-      author: user.id, // Solo enviamos el ID del usuario
+      author: {
+        _id: user.id,
+        username: user.name,
+        email: user.email,
+      },
       contenido: content,
     };
 
-    console.log("Sending post data:", newPost);
+    console.log("Sending post data:", newPost); // Check post data structure
 
     try {
       const res = await fetch("/api/home", {
@@ -71,26 +68,18 @@ export default function Home() {
         body: JSON.stringify(newPost),
       });
 
+      console.log("Response status:", res.status); // Check response status
       const responseData = await res.json();
-      console.log("Response status:", res.status);
-      console.log("Response data:", responseData); // 🔥 Muestra el error en consola
+      console.log("Response data:", responseData); // Check response data
 
-      if (!res.ok)
-        throw new Error(`Error al crear post: ${responseData.error}`);
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const updatedRes = await fetch("/api/home");
-      const updatedPosts = await updatedRes.json();
-
-      console.log("📢 Datos actualizados con populate:", updatedPosts);
-
-      setPosts(updatedPosts);
-      setContent("");
-      showInput(false);
-      setSuccessMessage(true);
+      if (res.ok) {
+        setPosts((prevPosts) => [responseData, ...prevPosts]);
+        setContent("");
+        showInput(false);
+        setSuccessMessage(true);
+      }
     } catch (error) {
-      console.error("❌ Error creando post:", error);
+      console.error("Error creating post:", error);
     }
   };
 
@@ -100,7 +89,9 @@ export default function Home() {
       try {
         const res = await fetch("/api/home");
         const data = await res.json();
-        console.log("📢 Datos recibidos en frontend:", data);
+        console.log("Posts data:", data);
+
+        console.log("Datos antes de ordenar:", data);
 
         const sortedPosts = data.sort(
           (
@@ -200,6 +191,21 @@ export default function Home() {
 
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
+      <div className="flex justify-between text-gray-800  mt-10">
+        <div>
+        <h2 className="text-center text-2xl font-bold">Martin Herrera</h2>
+        <p>@gherreramusica</p>
+        <p className="mt-8">Lorem ipsum dolor </p>
+        <p className="mt-4">300 seguidores</p>
+        </div>
+        <div className="w-[100px] h-[100px] rounded-full shadow-md border"></div>
+
+      </div>
+      <div className="flex justify-between gap-3 mt-5">
+        <button className="p-2 rounded-lg bg-green-500 w-full">New Post</button>
+        <button className="p-2  rounded-lg bg-green-500 w-full">Edit Profile</button>
+      </div>
+      
       <div
         className={`${
           successMessage ? "block" : "hidden"
@@ -259,7 +265,7 @@ export default function Home() {
               <Image
                 width={40}
                 height={40}
-                src={avatar || "/images/avatar.jpeg"}
+                src="/images/avatar.jpeg"
                 alt="avatar"
                 className="object-cover rounded-full"
               />
@@ -298,7 +304,7 @@ export default function Home() {
               <Image
                 width={40}
                 height={40}
-                src={avatar || "/images/avatar.jpeg"}
+                src="/images/avatar.jpeg"
                 alt="avatar"
                 className="object-cover rounded-full"
               />
@@ -317,112 +323,97 @@ export default function Home() {
                 No hay publicaciones aún.
               </p>
             ) : (
-              posts.map((p, index) => {
-                console.log(`📢 Post #${index + 1}:`, p); // Ver toda la data del post
-                console.log(`📢 Autor en frontend:`, p.author); // Ver el objeto author
-                console.log(`📢 Nombre del autor:`, p.author?.name); // Ver el valor específico
-                return (
-                  <li
-                    key={p._id}
-                    className="border-b flex gap-2 py-4 px-0 bg-white"
-                  >
-                    <div>
-                      <Image
-                        width={30}
-                        height={30}
-                        src={ p.author.avatar || "/images/avatar.png"} // Use author's avatar with fallback
-                        alt={"avatar"}
-                        className="object-cover rounded-full"
-
-                      />
-                    </div>
-                    <div className="w-full">
-                      <div className="flex space-x-3 relative justify-between items-center">
-                        <div className="flex space-x-3 items-center">
-                          <p className="text-sm text-gray-700">
-                            {p.author?.name ?? "Usuario desconocido"}
-                          </p>
-
-                          <p className="text-sm text-gray-700">
-                            {typeof p.author === "string"
-                              ? p.author
-                              : p.author?.username}
-                          </p>
-                          <p className="text-sm text-gray-400">
-                            {formatDate(p)}
-                          </p>
-                        </div>
-                        {/* Icono de opciones con menú desplegable */}
-                        <div className="relative">
-                          <MoreHorizontal
-                            className="w-4 h-4 text-gray-400 cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleMenuClick(p._id);
-                            }}
-                          />
-                          {selectedPostId === p._id && (
-                            <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                              {p.author._id === user?.id ? (
-                                <>
-                                  <button
-                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                    onClick={() => handleDeletePost(p._id)}
-                                  >
-                                    Eliminar
-                                  </button>
-                                  <button
-                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                    onClick={() => handleDeletePost(p._id)}
-                                  >
-                                    Guardar
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <button
-                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                    onClick={() => {
-                                      const updatedPosts = posts.filter(
-                                        (post) => post._id !== p._id
-                                      );
-                                      setPosts(updatedPosts);
-                                      setSelectedPostId(null);
-                                    }}
-                                  >
-                                    Ocultar
-                                  </button>{" "}
-                                  <button
-                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                    onClick={() => console.log("Mostrar Menos")}
-                                  >
-                                    Mostrar menos
-                                  </button>
-                                  <button
-                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                    onClick={() => console.log("Reportar")}
-                                  >
-                                    Reportar
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          )}{" "}
-                        </div>
+              posts.map((p) => (
+                <li key={p._id} className="border-b flex gap-2 py-4 px-0 bg-white">
+                  <div>
+                    <Image
+                      width={30}
+                      height={30}
+                      src={p.author.avatar || "/images/avatar.png"} // Use author's avatar with fallback
+                      alt={`${p.author.username}'s avatar`}
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <div className="flex space-x-3 relative justify-between items-center">
+                      <div className="flex space-x-3 items-center">
+                        <p className="text-sm text-gray-700">
+                          {typeof p.author === "string"
+                            ? p.author
+                            : p.author?.username}
+                        </p>
+                        <p className="text-sm text-gray-400">{formatDate(p)}</p>
                       </div>
-                      <p className="text-gray-600">{p.contenido}</p>
-                      <div className="flex space-x-2 mt-2 items-center">
-                        <HandThumbUpIcon
-                          className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
-                          onClick={() => handleLike(p._id)}
+                      {/* Icono de opciones con menú desplegable */}
+                      <div className="relative">
+                        <MoreHorizontal
+                          className="w-4 h-4 text-gray-400 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMenuClick(p._id);
+                          }}
                         />
-                        <span className="text-sm text-gray-600">{p.likes}</span>
-                        <BookmarkIcon className="w-5 h-5" />
+                        {selectedPostId === p._id && (
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            {p.author._id === user?.id ? (
+                              <>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => handleDeletePost(p._id)}
+                                >
+                                  Eliminar
+                                </button>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => handleDeletePost(p._id)}
+                                >
+                                  Guardar
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => {
+                                    const updatedPosts = posts.filter(
+                                      (post) => post._id !== p._id
+                                    );
+                                    setPosts(updatedPosts);
+                                    setSelectedPostId(null);
+                                  }}
+                                >
+                                  Ocultar
+                                </button>{" "}
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => console.log("Mostrar Menos")}
+                                >
+                                  Mostrar menos
+                                </button>
+                                <button
+                                  className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                                  onClick={() => console.log("Reportar")}
+                                >
+                                  Reportar
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        )}{" "}
                       </div>
                     </div>
-                  </li>
-                );
-              })
+                    <p className="text-gray-600">{p.contenido}</p>
+                    <div className="flex space-x-2 mt-2 items-center">
+                      <HandThumbUpIcon
+                        className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
+                        onClick={() => handleLike(p._id)}
+                      />
+                      <span className="text-sm text-gray-600">{p.likes}</span>
+                      <BookmarkIcon className="w-5 h-5" />
+                    </div>
+                  </div>
+                </li>
+              ))
             )}
           </ul>
         )}

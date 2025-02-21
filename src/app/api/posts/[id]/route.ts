@@ -27,3 +27,41 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Error fetching post" }, { status: 500 });
   }
 }
+
+
+
+export async function DELETE(request: NextRequest) {
+  try {
+    await connectDB();
+
+    // Extract ID from the request URL
+    const url = new URL(request.url);
+    const id = url.pathname.split("/").pop();
+
+    // Validate the ID
+    if (!id || !ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid ID format" },
+        { status: 400 }
+      );
+    }
+
+    // Convert id to ObjectId and delete the post
+    const deletedPost = await Post.findByIdAndDelete(new ObjectId(id));
+
+    if (!deletedPost) {
+      return NextResponse.json(
+        { error: "Post not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Post successfully deleted" });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

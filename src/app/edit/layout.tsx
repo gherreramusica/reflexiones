@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import {
@@ -24,23 +24,15 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function PostLayout({ children }: LayoutProps) {
+
+
+export default function EditLayout({ children }: LayoutProps) {
   const [sideBar, showSidebar] = useState(false);
   const { isAuthenticated, logout } = useAuth();
-  const { user } = useAuth();
-  const [avatar, setAvatar] = useState<string | null>(null);
-
-  useEffect(() => {
-    console.log("Usuario autenticado:", user);
-    if (user) {
-      setAvatar(user.avatar || "/images/avatar.png");
-    }
-  }, [user]);
 
   const handleMenu = () => {
     showSidebar(!sideBar);
   };
-
   return (
     <div className={`h-screen flex flex-col ${poppins.variable} relative`}>
       <h1 className="fixed top-[45%] left-[0%] hidden lg:block text-[100px] font-bold text-gray-100 rotate-90">
@@ -73,27 +65,19 @@ export default function PostLayout({ children }: LayoutProps) {
                 <Image
                   width={30}
                   height={30}
-                  src={avatar || "/images/avatar.png"} // Use user's avatar with fallback
+                  src={"/images/avatar.png"} // Use author's avatar with fallback
                   alt={"Avatar"}
                   className="object-cover rounded-full"
                 />
               </button>
               {/* Dropdown para cerrar sesión */}
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Link href={"/cuenta"}>
-                  <div className="flex items-center gap-2 px-4 py-2 border-b">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <Image
-                        width={30}
-                        height={30}
-                        src={avatar || "/images/avatar.png"} // Use user's avatar with fallback
-                        alt={"Avatar"}
-                        className="object-cover rounded-full"
-                      />
-                    </div>
-                    <span className="text-sm text-gray-700">Usuario</span>
+                <div className="flex items-center gap-2 px-4 py-2 border-b">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                    <UserIcon className="w-5 h-5 text-gray-600" />
                   </div>
-                </Link>
+                  <span className="text-sm text-gray-700">Usuario</span>
+                </div>
                 <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2">
                   <Cog6ToothIcon className="w-4 h-4" />
                   Configuración
