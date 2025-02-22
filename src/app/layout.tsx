@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar/page";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
 import { ModulesProvider } from "@/context/modulesContext"
 import Carousel from "@/components/carousel/page";
