@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import Note from "@/models/Note";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET() {
   try {
@@ -89,13 +89,16 @@ export async function PATCH(req: Request) {
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
-    const deletedNote = await Note.findByIdAndDelete(params.id);
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "Se requiere el ID del post" }, { status: 400 });
+    }
+
+    const deletedNote = await Note.findByIdAndDelete(id);
     
     if (!deletedNote) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -103,9 +106,9 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("❌ Error en DELETE:", error);
     return NextResponse.json(
-      { error: "Error deleting post" },
+      { error: error instanceof Error ? error.message : "Error deleting post" },
       { status: 500 }
     );
   }
