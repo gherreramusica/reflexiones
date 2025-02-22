@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { es } from "date-fns/locale";
 import Carousel from "@/components/carousel/page";
@@ -127,31 +127,50 @@ export default function Home() {
   }, []);
 
   const formatDate = (post: Post) => {
-    const dateString = post.createdAt || post.timestamp;
-
-    if (!dateString) return "Fecha desconocida";
-
+    const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
+  
+    if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
+  
     let parsedDate = new Date(dateString);
-
+  
+    // Si `dateString` no es válido, intenta parsearlo
     if (isNaN(parsedDate.getTime())) {
       parsedDate = new Date(Date.parse(dateString));
     }
-
+  
+    // Si sigue sin ser una fecha válida, muestra error
     if (isNaN(parsedDate.getTime())) {
       console.error("Error al convertir la fecha:", dateString);
       return "Fecha inválida";
     }
-
+  
     const now = new Date();
     const diffInDays = Math.floor(
       (now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-
+  
     if (diffInDays < 30) {
-      return `hace ${formatDistanceToNow(parsedDate, {
+      const distance = formatDistanceToNowStrict(parsedDate, {
         addSuffix: false,
         locale: es,
-      })}`;
+      });
+  
+      // Acortar el resultado
+      const shortDistance = distance
+        .replace("años", "a")
+        .replace("año", "a")
+        .replace("meses", "m")
+        .replace("mes", "m")
+        .replace("días", "d")
+        .replace("día", "d")
+        .replace("horas", "h")
+        .replace("hora", "h")
+        .replace("minutos", "m")
+        .replace("minuto", "m")
+        .replace("segundos", "s")
+        .replace("segundo", "s");
+  
+      return `hace ${shortDistance}`;
     } else {
       return parsedDate.toLocaleDateString("es-ES");
     }
