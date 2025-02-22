@@ -43,10 +43,14 @@ export async function POST(req: NextRequest) {
   await ensureUploadDir();
   const nodeReq = await toNodeRequest(req);
 
-  const form = new formidable.IncomingForm();
-  form.uploadDir = uploadDir; // 📂 Guardar en `/public/uploads`
-  form.keepExtensions = true; // 🔥 Mantener extensión original
-  form.multiples = false; // 📌 Asegurar que solo sube 1 archivo
+
+
+const form = new formidable.IncomingForm({
+  uploadDir: "/public/uploads", // 📂 Directorio donde se guardarán los archivos
+  keepExtensions: true, // 🔥 Mantener la extensión original
+  multiples: false, // 📌 Solo permitir 1 archivo
+});
+
 
   return new Promise((resolve) => {
     form.parse(nodeReq, async (err, fields, files) => {
