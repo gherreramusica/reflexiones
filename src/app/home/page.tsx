@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { es } from "date-fns/locale";
-import Carousel from "@/components/carousel/page";
 import { useAuth } from "@/hooks/useAuth";
 import { MoreHorizontal } from "lucide-react";
 
@@ -227,9 +226,7 @@ export default function Home() {
       >
         <h4>Mensaje Enviado</h4>
       </div>
-      <div>
-        <Carousel />
-      </div>
+      
  
       <div>
         <ul className="flex gap-3 justify-center">

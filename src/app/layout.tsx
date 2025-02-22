@@ -14,7 +14,9 @@ import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar/page";
 import { ReactNode, useEffect, useState } from "react";
 import { Poppins } from "next/font/google";
-import { ModulesProvider } from "@/context/modulesContext";
+import { ModulesProvider } from "@/context/modulesContext"
+import Carousel from "@/components/carousel/page";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -138,6 +140,11 @@ export default function RootLayout({
       >
         <Sidebar />
       </div>
+      <div className="pl-4 pr-4">
+      <Carousel/>
+      </div>
+        
+      
 
       <main>{children}</main>
     </div>
