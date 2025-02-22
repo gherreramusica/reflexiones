@@ -5,6 +5,8 @@ import path from "path";
 import { Readable } from "stream";
 import type { IncomingMessage } from "http";
 
+
+
 export const config = {
   api: {
     bodyParser: false, // 🔥 Necesario para manejar archivos en Next.js
