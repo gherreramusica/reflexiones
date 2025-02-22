@@ -1,12 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals = { formidable: "commonjs formidable" };
-    }
-    return config;
-  },
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
     remotePatterns: [
       {
