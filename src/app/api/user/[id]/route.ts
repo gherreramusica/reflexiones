@@ -2,10 +2,12 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest) {
   try {
     await connectDB();
-    const userId = params.id;
+    const url = new URL(req.url);
+    const userId = url.pathname.split('/').pop(); // Obtiene el ID del usuario desde la URL
+
     const { name, username, bio, avatar } = await req.json();
 
     if (!userId) {
