@@ -1,8 +1,8 @@
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB();
     const userId = params.id;
