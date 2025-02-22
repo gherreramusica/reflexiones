@@ -11,6 +11,7 @@ import Carousel from "@/components/carousel/page";
 import { useAuth } from "@/hooks/useAuth";
 import { MoreHorizontal } from "lucide-react";
 
+
 interface Post {
   _id: string;
   author: {
@@ -229,6 +230,7 @@ export default function Home() {
       <div>
         <Carousel />
       </div>
+ 
       <div>
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
