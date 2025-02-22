@@ -28,7 +28,7 @@ interface Post {
 }
 
 export default function Blog() {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [input, showInput] = useState(false);
   const [post, setPost] = useState<Post[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
