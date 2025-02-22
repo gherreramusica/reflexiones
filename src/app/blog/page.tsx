@@ -120,12 +120,12 @@ export default function Blog() {
 
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)]  m-auto relative max-w-[90%] lg:max-w-[500px]">
-      <div className="mt-10">
+      <div className="mt-5">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/home" ? "border font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/home" ? "border" : ""
               }`}
             >
               Notes
@@ -133,8 +133,8 @@ export default function Blog() {
           </Link>
           <Link href="/blog">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/blog" ? "border font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/blog" ? "border" : ""
               }`}
             >
               Articles
@@ -142,8 +142,8 @@ export default function Blog() {
           </Link>
           <Link href="/saves">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/saves" ? "border  font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/saves" ? "border" : ""
               }`}
             >
               Saves

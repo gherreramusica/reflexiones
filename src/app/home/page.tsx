@@ -228,12 +228,12 @@ export default function Home() {
       </div>
       
  
-      <div>
+      <div className="mt-5">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/home" ? "border font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/home" ? "border" : ""
               }`}
             >
               Notes
@@ -241,8 +241,8 @@ export default function Home() {
           </Link>
           <Link href="/blog">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/blog" ? "border text-white font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/blog" ? "text-white" : ""
               }`}
             >
               Articles
@@ -250,8 +250,8 @@ export default function Home() {
           </Link>
           <Link href="/saves">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/saves" ? "border text-white font-bold" : ""
+              className={`bg-gray-100 p-1 text-sm rounded-md ${
+                pathname === "/saves" ? "text-white" : ""
               }`}
             >
               Saves
