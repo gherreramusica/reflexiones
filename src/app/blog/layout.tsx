@@ -84,7 +84,7 @@ export default function PostLayout({ children }: LayoutProps) {
                 />
               </button>
               {/* Dropdown para cerrar sesión */}
-              <div className={`absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 ${dropdown ? "group-hover:opacity-100" : "opacity-0"}   transition-opacity duration-300`}>
+              <div className={`absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 ${dropdown ? "block" : "hidden"}   transition-opacity duration-300`}>
                 <Link href={"/cuenta"}>
                   <div className="flex items-center gap-2 px-4 py-2 border-b">
                     <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
