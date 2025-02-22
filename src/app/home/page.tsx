@@ -232,8 +232,8 @@ export default function Home() {
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
             <li
-              className={`bg-gray-100 p-1 text-sm rounded-md ${
-                pathname === "/home" ? "border" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/home" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Notes
@@ -241,8 +241,8 @@ export default function Home() {
           </Link>
           <Link href="/blog">
             <li
-              className={`bg-gray-100 p-1 text-sm rounded-md ${
-                pathname === "/blog" ? "text-white" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/blog" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Articles
@@ -250,8 +250,8 @@ export default function Home() {
           </Link>
           <Link href="/saves">
             <li
-              className={`bg-gray-100 p-1 text-sm rounded-md ${
-                pathname === "/saves" ? "text-white" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/saves" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Saves
