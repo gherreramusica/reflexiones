@@ -29,6 +29,7 @@ export default function HomeLayout({ children }: LayoutProps) {
   const { isAuthenticated, logout } = useAuth();
   const { user } = useAuth();
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [dropdown, setDropdown] = useState(false);
 
   useEffect(() => {
     console.log("Usuario autenticado:", user);
@@ -39,6 +40,10 @@ export default function HomeLayout({ children }: LayoutProps) {
 
   const handleMenu = () => {
     showSidebar(!sideBar);
+  };
+
+  const handleDropdown = () => {
+    setDropdown(!dropdown);
   };
 
   return (
@@ -69,7 +74,7 @@ export default function HomeLayout({ children }: LayoutProps) {
         <div className="relative flex items-center">
           {isAuthenticated ? (
             <div className="relative group">
-              <button className="flex items-center gap-2">
+              <button onClick={handleDropdown} className="flex items-center gap-2">
                 <Image
                   width={30}
                   height={30}
@@ -79,7 +84,7 @@ export default function HomeLayout({ children }: LayoutProps) {
                 />
               </button>
               {/* Dropdown para cerrar sesión */}
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className={`absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md p-2  ${dropdown ? "group-hover:opacity-100" : "opacity-0"}   transition-opacity duration-300`}>
                 <Link href={"/cuenta"}>
                   <div className="flex items-center gap-2 px-4 py-2 border-b">
                     <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
