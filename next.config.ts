@@ -5,8 +5,13 @@ const nextConfig: NextConfig = {
     if (isServer) {
       config.externals = {
         formidable: "commonjs formidable",
-        "mongodb-client-encryption": "commonjs mongodb-client-encryption", // Evita error con MongoDB Encryption
-        kerberos: "commonjs kerberos", // 🚀 Evita error con Kerberos
+        "mongodb-client-encryption": "commonjs mongodb-client-encryption",
+        kerberos: "commonjs kerberos",
+      };
+
+      // 🚀 Permite módulos de Node.js en Webpack 5
+      config.resolve.fallback = {
+        async_hooks: false, // Evita error con "node:async_hooks"
       };
     }
     return config;
@@ -22,4 +27,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
