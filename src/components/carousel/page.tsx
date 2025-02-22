@@ -86,7 +86,7 @@ const Carousel: React.FC = () => {
     <div className="w-full">
       <Slider {...settings}>
         {modules.map((module, index) => (
-          <div key={index} className="w-full relative p-4">
+          <div key={index} className="w-full relative pt-4 pb-4">
             {/* Module Header with Dynamic Border Radius */}
             <div
               className={`flex justify-between items-center bg-green-500 text-white text-center font-bold p-2 
