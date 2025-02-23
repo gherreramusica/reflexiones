@@ -3,7 +3,6 @@ import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 import { MoreHorizontal } from "lucide-react";
@@ -33,7 +32,7 @@ export default function Blog() {
   const [input, showInput] = useState(false);
   const [post, setPost] = useState<Post[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const pathname = usePathname(); // Obtener la ruta actual
+
 
   useEffect(() => {
     fetch("/api/posts")

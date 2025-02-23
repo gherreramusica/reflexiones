@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -326,12 +325,12 @@ export default function Home() {
                     <div className="w-full">
                       <div className="flex space-x-3 relative justify-between items-center">
                         <div className="flex space-x-3 items-center">
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-600 font-bold">
                             {p.author?.name ?? "Usuario desconocido"}
                           </p>
 
-                          <p className="text-sm text-gray-700">
-                            {typeof p.author === "string"
+                          <p className="text-sm text-gray-400">
+                            @{typeof p.author === "string"
                               ? p.author
                               : p.author?.username}
                           </p>

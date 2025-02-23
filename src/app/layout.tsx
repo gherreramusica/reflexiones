@@ -68,7 +68,7 @@ export default function RootLayout({
           <body className={`${poppins.variable} font-sans`}>
             <ModulesProvider>
               <div className={`h-screen flex flex-col ${poppins.variable} relative`}>
-                <h1 className="fixed top-[45%] left-[0%] hidden lg:block text-[100px] font-bold text-gray-100 rotate-90">
+                <h1 className="fixed top-[45%] left-[-15%] hidden lg:block text-[100px] font-bold text-gray-100 rotate-90">
                   REFLEXIONES
                 </h1>
   
