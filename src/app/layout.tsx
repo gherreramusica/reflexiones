@@ -23,7 +23,7 @@ export default function RootLayout({
 
 
   const pathname = usePathname();
-  const excludePaths = ["/", "/login", "/register"];
+  const excludePaths = ["/", "/login", "/register", "/editor"];
 
   
   return (

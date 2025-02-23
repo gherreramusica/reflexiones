@@ -83,11 +83,11 @@ export default function Header() {
       </div>
 
       {/* Logo */}
-      <div className="relative w-fit">
-        <Link href="/home">
-          <Image width={35} height={35} src="/images/R.png" alt="Logo" />
-        </Link>
-      </div>
+      <div className="absolute left-1/2 transform -translate-x-1/2">
+    <Link href="/home">
+      <Image width={35} height={35} src="/images/R.png" alt="Logo" />
+    </Link>
+  </div>
 
       {/* Icono del Usuario + Menú de Cerrar Sesión */}
       <div className="relative flex items-center">
