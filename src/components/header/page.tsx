@@ -84,10 +84,10 @@ export default function Header() {
 
       {/* Logo */}
       <div className="absolute left-1/2 transform -translate-x-1/2">
-    <Link href="/home">
-      <Image width={35} height={35} src="/images/R.png" alt="Logo" />
-    </Link>
-  </div>
+        <Link href="/home">
+          <Image width={35} height={35} src="/images/R.png" alt="Logo" />
+        </Link>
+      </div>
 
       {/* Icono del Usuario + Menú de Cerrar Sesión */}
       <div className="relative flex items-center">
@@ -184,7 +184,7 @@ export default function Header() {
           </div>
 
           <div className="max-w-2xl mx-auto p-4">
-            <h1 className="text-center text-2xl font-bold">
+            <h1 className="text-center text-xl font-bold">
               {capitulo?.name} {capitulo?.chapter}
             </h1>
 
@@ -224,14 +224,15 @@ export default function Header() {
             )}
 
             {/* 📜 Versículos */}
-            <div className="mt-4 text-sm font-normal space-y-2">
-              {capitulo?.vers?.map((versiculo) => (
-                <p className="text-gray-900" key={versiculo.number}>
-                  <strong className="font-normal text-gray-500">
+            <div className="mt-4 text-sm text-left font-normal text-gray-900">
+              {capitulo?.vers?.map((versiculo, index) => (
+                <span className="text-sm text-gray-800 leading-relaxed" key={versiculo.number}>
+                  <strong className="text-xs font-normal text-black align-top">
                     {versiculo.number}
                   </strong>{" "}
                   {versiculo.verse}
-                </p>
+                  {index < capitulo.vers.length - 1 && " "}
+                </span>
               ))}
             </div>
 
