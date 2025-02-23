@@ -19,13 +19,6 @@ interface Versiculo {
   verse: string; // Texto del versículo
   id: number; // ID único
 }
-interface Capitulo {
-  chapter: number;
-  name: string;
-  num_chapters: number;
-  testament: string;
-  vers: Versiculo[]; // ✅ Lista de versículos
-}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
