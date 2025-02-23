@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import Sidebar from "../sidebar/sidebar/page";
 
 // Define la estructura del versículo
 interface Versiculo {
@@ -35,13 +36,12 @@ export default function Header() {
   const [book, setBook] = useState("salmos"); // 📖 Libro por defecto
   const [chapter, setChapter] = useState(1); // 🔢 Capítulo por defecto
   const [loading, setLoading] = useState(false); // ⏳ Estado de carga
-  const [capitulo, setCapitulo] = useState<{ 
-    chapter: number; 
-    name: string; 
-    vers: Versiculo[]; 
-  }>({ chapter: 1, name: "", vers: [] });
-  
 
+  const [capitulo, setCapitulo] = useState<{
+    chapter: number;
+    name: string;
+    vers: Versiculo[];
+  }>({ chapter: 1, name: "", vers: [] });
 
   useEffect(() => {
     if (user) {
@@ -49,8 +49,8 @@ export default function Header() {
     }
   }, [user]);
 
-   // 📌 Fetch del capítulo actual
-   useEffect(() => {
+  // 📌 Fetch del capítulo actual
+  useEffect(() => {
     setLoading(true);
     fetch(`https://bible-api.deno.dev/api/read/nvi/${book}/${chapter}`)
       .then((response) => response.json())
@@ -63,17 +63,13 @@ export default function Header() {
         setLoading(false);
       });
   }, [book, chapter]); // ✅ Mantén siempre el mismo tamaño en este array
-  
-
-
-  
 
   const handleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const handleBible = () => setBible(!bible);
 
-   // 📌 Función para avanzar al siguiente capítulo
-   const nextChapter = () => {
+  // 📌 Función para avanzar al siguiente capítulo
+  const nextChapter = () => {
     setChapter((prev) => prev + 1);
   };
 
@@ -85,7 +81,7 @@ export default function Header() {
   };
 
   return (
-    <header className="p-2 sticky top-0 z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
+    <header className="p-2 w-full z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
       {/* Menú Hamburguesa */}
       <div className="flex items-center">
         <button className="text-lg" onClick={handleMenu}>
@@ -166,13 +162,25 @@ export default function Header() {
           </Link>
         )}
       </div>
+      {/* Sidebar */}
+      <div
+        className={`fixed top-[5%] left-0 z-50 w-[100%] h-full  text-white transition-all duration-300 ease-in-out transform ${
+          isMenuOpen
+            ? "translate-x-0 opacity-100"
+            : "-translate-x-full opacity-0"
+        }`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Modal de la Biblia */}
       {bible && (
         <div className="flex flex-col bg-white w-full fixed top-0 left-0 h-screen z-50">
           <div className="p-2 bg-white w-full">
             <div className="flex justify-between w-full">
-              <h3 className="font-bold uppercase text-sm">{book} {capitulo.chapter}</h3>
+              <h3 className="font-bold uppercase text-sm">
+                {book} {capitulo.chapter}
+              </h3>
               <button
                 onClick={handleBible}
                 className="rounded-lg p-2 text-sm bg-gray-200"
@@ -183,67 +191,74 @@ export default function Header() {
           </div>
 
           <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-center text-2xl font-bold">
-        {capitulo?.name} {capitulo?.chapter}
-      </h1>
+            <h1 className="text-center text-2xl font-bold">
+              {capitulo?.name} {capitulo?.chapter}
+            </h1>
 
-      {/* 📖 Selector de libro y capítulo */}
-      <div className="flex gap-2 justify-center my-4">
-        <select
-          className="p-2 border text-sm rounded"
-          value={book}
-          onChange={(e) => {
-            setBook(e.target.value);
-            setChapter(1); // 🔄 Reiniciar a capítulo 1 al cambiar de libro
-          }}
-        >
-          <option value="genesis">Génesis</option>
-          <option value="exodo">Éxodo</option>
-          <option value="salmos">Salmos</option>
-          <option value="mateo">Mateo</option>
-          <option value="juan">Juan</option>
-          <option value="apocalipsis">Apocalipsis</option>
-          {/* 🔥 Agrega más libros aquí */}
-        </select>
+            {/* 📖 Selector de libro y capítulo */}
+            <div className="flex gap-2 justify-center my-4">
+              <select
+                className="p-2 border text-sm rounded"
+                value={book}
+                onChange={(e) => {
+                  setBook(e.target.value);
+                  setChapter(1); // 🔄 Reiniciar a capítulo 1 al cambiar de libro
+                }}
+              >
+                <option value="genesis">Génesis</option>
+                <option value="exodo">Éxodo</option>
+                <option value="salmos">Salmos</option>
+                <option value="mateo">Mateo</option>
+                <option value="juan">Juan</option>
+                <option value="apocalipsis">Apocalipsis</option>
+                {/* 🔥 Agrega más libros aquí */}
+              </select>
 
-        <input
-          type="number"
-          className="p-2 text-sm border rounded w-16"
-          value={chapter}
-          min="1"
-          onChange={(e) => setChapter(parseInt(e.target.value))}
-        />
-      </div>
+              <input
+                type="number"
+                className="p-2 text-sm border rounded w-16"
+                value={chapter}
+                min="1"
+                onChange={(e) => setChapter(parseInt(e.target.value))}
+              />
+            </div>
 
-      {/* ⏳ Indicador de carga */}
-      {loading && <p className="text-center text-sm font-normal text-gray-500">Cargando...</p>}
+            {/* ⏳ Indicador de carga */}
+            {loading && (
+              <p className="text-center text-sm font-normal text-gray-500">
+                Cargando...
+              </p>
+            )}
 
-      {/* 📜 Versículos */}
-      <div className="mt-4 text-sm font-normal space-y-2 overflow-y-auto max-h-[600px]">
-        {capitulo?.vers?.map((versiculo: any) => (
-          <p className="text-gray-900" key={versiculo.number}>
-            <strong className="font-normal text-gray-500">{versiculo.number}</strong> {versiculo.verse}
-          </p>
-        ))}
-      </div>
+            {/* 📜 Versículos */}
+            <div className="mt-4 text-sm font-normal space-y-2 overflow-y-auto max-h-[600px]">
+              {capitulo?.vers?.map((versiculo: any) => (
+                <p className="text-gray-900" key={versiculo.number}>
+                  <strong className="font-normal text-gray-500">
+                    {versiculo.number}
+                  </strong>{" "}
+                  {versiculo.verse}
+                </p>
+              ))}
+            </div>
 
-      {/* 🔄 Controles de navegación */}
-      <div className="flex text-sm justify-between mt-4">
-        <button
-          onClick={prevChapter}
-          className="p-2 border rounded bg-gray-200"
-          disabled={chapter === 1}
-        >
-          ← Anterior
-        </button>
-        <button
-          onClick={nextChapter}
-          className="p-2 border rounded bg-gray-200"
-        >
-          Siguiente →
-        </button>
-      </div>
-    </div>
+            {/* 🔄 Controles de navegación */}
+            <div className="flex text-sm justify-between mt-4">
+              <button
+                onClick={prevChapter}
+                className="p-2 border rounded bg-gray-200"
+                disabled={chapter === 1}
+              >
+                ← Anterior
+              </button>
+              <button
+                onClick={nextChapter}
+                className="p-2 border rounded bg-gray-200"
+              >
+                Siguiente →
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </header>

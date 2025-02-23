@@ -9,15 +9,15 @@ const Sidebar: React.FC = () => {
   const { addModule } = useModules();
 
   return (
-    <div className="p-4 fixed top-3 min-h-screen bg-gray-100 w-full">
+    <div className="pt-10 fixed top-0 min-h-screen bg-white w-full">
       <div>
         <h2 className="text-xl text-gray-500 font-bold mb-4">Add Widgets</h2>
         <div>
           <button
-            onClick={() => addModule("Bible")}
+            onClick={() => addModule("Versiculos")}
             className="mb-2 text-gray-500 rounded-md"
           >
-            Bible +
+            Versiculos +
           </button>
         </div>
         <div>
