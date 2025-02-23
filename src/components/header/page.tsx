@@ -225,7 +225,7 @@ export default function Header() {
 
             {/* 📜 Versículos */}
             <div className="mt-4 text-sm font-normal space-y-2 overflow-y-auto max-h-[600px]">
-              {capitulo?.vers?.map((versiculo: any) => (
+              {capitulo?.vers?.map((versiculo) => (
                 <p className="text-gray-900" key={versiculo.number}>
                   <strong className="font-normal text-gray-500">
                     {versiculo.number}
