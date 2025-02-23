@@ -7,8 +7,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useModules } from "@/context/modulesContext";
 import Calculadora from "../Calculadora/page";
-import { ChevronDown, ChevronUp, CircleMinus, ChevronLeft, ChevronRight } from "lucide-react";
-
+import {
+  ChevronDown,
+  ChevronUp,
+  CircleMinus,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 interface ArrowProps {
   className?: string;
@@ -76,17 +81,40 @@ const Carousel: React.FC = () => {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 768, // Pantallas pequeñas (tablets y móviles)
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1024, // Pantallas medianas (tablets y pequeños laptops)
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1200, // Pantallas grandes (laptops y desktops)
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full m-auto ">
       <Slider {...settings}>
         {modules.map((module, index) => (
-          <div key={index} className="w-full relative pt-4 pb-4">
+          <div key={index} className="relative pt-4 pb-4 px-2">
             {/* Module Header with Dynamic Border Radius */}
             <div
               className={`flex justify-between items-center bg-green-500 text-white text-center font-bold p-2 

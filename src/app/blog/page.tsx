@@ -9,6 +9,7 @@ import { es } from "date-fns/locale";
 import { MoreHorizontal } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
+
 interface Post {
   _id: string;
   author: {
@@ -120,37 +121,7 @@ export default function Blog() {
 
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)]  m-auto relative max-w-[90%] lg:max-w-[500px]">
-      <div className="mt-5">
-        <ul className="flex gap-3 justify-center">
-          <Link href="/home">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/home" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Notes
-            </li>
-          </Link>
-          <Link href="/blog">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/blog" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Articles
-            </li>
-          </Link>
-          <Link href="/saves">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/saves" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Saves
-            </li>
-          </Link>
-        </ul>
-      </div>
+   
       {/* Overlay oscuro cuando el input está activo */}
       {input && (
         <div
@@ -197,7 +168,7 @@ export default function Blog() {
         </div>
 
         {/* Botón para mostrar el textarea */}
-        <div className="mt-10">
+        <div className="mt-5">
           <Link href="/editor">
             <div className="bg-white flex shadow-md items-center gap-4 p-3 border cursor-pointer min-w-[330px] text-gray-500 rounded-md">
               <div className="rounded-full overflow-hidden w-[40px] h-[40px]">

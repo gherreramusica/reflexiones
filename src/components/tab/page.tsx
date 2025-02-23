@@ -1,18 +1,17 @@
 'use client';
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 
 
 export default function Tab() {
     const pathname = usePathname();
     return (
-        <div>
+        <div className="mt-5">
         <ul className="flex gap-3 justify-center">
           <Link href="/home">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/home" ? "border font-bold" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/home" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Notes
@@ -20,8 +19,8 @@ export default function Tab() {
           </Link>
           <Link href="/blog">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/blog" ? "border text-white font-bold" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/blog" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Articles
@@ -29,8 +28,8 @@ export default function Tab() {
           </Link>
           <Link href="/saves">
             <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/saves" ? "border text-white font-bold" : ""
+              className={`p-2 text-sm rounded-lg ${
+                pathname === "/saves" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
               }`}
             >
               Saves

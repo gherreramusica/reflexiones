@@ -17,6 +17,7 @@ import { Poppins } from "next/font/google";
 import { ModulesProvider } from "@/context/modulesContext"
 import Carousel from "@/components/carousel/page";
 import { usePathname } from "next/navigation";
+import Tab from "@/components/tab/page";
 
 
 
@@ -72,7 +73,7 @@ export default function RootLayout({
                 </h1>
   
                 {/* Header principal */}
-                <header className="p-3 sticky top-0 z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
+                <header className="p-2 sticky top-0 z-[99] flex justify-between items-center bg-white text-black text-center text-3xl font-bold border-b">
                   {/* Menú Hamburguesa */}
                   <div className="flex items-center">
                     <button className="text-lg" onClick={handleMenu}>
@@ -83,9 +84,9 @@ export default function RootLayout({
                   {/* Logo */}
                   <div className="relative w-fit">
                     <Link href="/home">
-                      <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400">
-                        R
-                      </h1>
+                      <Image width={35} height={35} src="/images/R.png" alt="Logo">
+
+                      </Image>
                     </Link>
                   </div>
   
@@ -155,6 +156,7 @@ export default function RootLayout({
                 <div className="pl-4 pr-4">
                   <Carousel />
                 </div>
+                <Tab/>
   
                 <main>{children}</main>
               </div>

@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { MoreHorizontal } from "lucide-react";
 
 
+
 interface Post {
   _id: string;
   author: {
@@ -218,7 +219,7 @@ export default function Home() {
   };
 
   return (
-    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
+    <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[500px] w-[90%] lg:max-w-[500px] m-auto relative">
       <div
         className={`${
           successMessage ? "block" : "hidden"
@@ -226,39 +227,7 @@ export default function Home() {
       >
         <h4>Mensaje Enviado</h4>
       </div>
-      
- 
-      <div className="mt-5">
-        <ul className="flex gap-3 justify-center">
-          <Link href="/home">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/home" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Notes
-            </li>
-          </Link>
-          <Link href="/blog">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/blog" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Articles
-            </li>
-          </Link>
-          <Link href="/saves">
-            <li
-              className={`p-2 text-sm rounded-lg ${
-                pathname === "/saves" ? "bg-black text-gray-200" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              Saves
-            </li>
-          </Link>
-        </ul>
-      </div>
+    
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
@@ -307,9 +276,9 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="mt-10">
+        <div className="mt-5">
           <div
-            className="bg-white flex items-center gap-4 text-gray-500 p-4 shadow-md border cursor-pointer min-w-[330px] rounded-md"
+            className="bg-white flex items-center gap-4 text-gray-500 p-3 shadow-md border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
           >
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
