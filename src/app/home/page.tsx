@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
-import { usePathname } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { es } from "date-fns/locale";
