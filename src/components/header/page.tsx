@@ -168,7 +168,7 @@ export default function Header() {
 
       {/* Modal de la Biblia */}
       {bible && (
-        <div className="flex flex-col bg-white w-full fixed top-0 left-0 h-screen z-50">
+        <div className="flex flex-col bg-white w-full fixed top-0 left-0 h-[100%] overflow-y-auto z-50">
           <div className="p-2 bg-white w-full">
             <div className="flex justify-between w-full">
               <h3 className="font-bold uppercase text-sm">
@@ -224,7 +224,7 @@ export default function Header() {
             )}
 
             {/* 📜 Versículos */}
-            <div className="mt-4 text-sm font-normal space-y-2 overflow-y-auto max-h-[600px]">
+            <div className="mt-4 text-sm font-normal space-y-2">
               {capitulo?.vers?.map((versiculo) => (
                 <p className="text-gray-900" key={versiculo.number}>
                   <strong className="font-normal text-gray-500">
