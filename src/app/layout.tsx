@@ -136,7 +136,7 @@ export default function RootLayout({
                       )}
                     </div>
                   ) : (
-                    <Link href="/">
+                    <Link href="/login">
                       <UserIcon className="w-6 h-6 text-gray-700" />
                     </Link>
                   )}
