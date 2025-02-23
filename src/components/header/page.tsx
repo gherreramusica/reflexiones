@@ -171,9 +171,11 @@ export default function Header() {
         <div className="flex flex-col bg-white w-full fixed top-0 left-0 h-[100%] overflow-y-auto z-50">
           <div className="p-2 bg-white w-full">
             <div className="flex justify-between w-full">
-              <h3 className="font-bold uppercase text-sm">
+              <h3 className="font-bold sm:block hidden uppercase text-sm">
                 {book} {capitulo.chapter}
               </h3>
+              {/*quiero implementar aqui un buscador de versiculos*/}
+              <input type="search" className="border text-sm rounded-xl p-2 min-w-[200px]" placeholder="Buscar" name="Buscar" id=""/>
               <button
                 onClick={handleBible}
                 className="rounded-lg p-2 text-sm bg-gray-200"
