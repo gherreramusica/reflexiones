@@ -90,7 +90,7 @@ export default function Blog() {
         .replace("segundos", "s")
         .replace("segundo", "s");
   
-      return `hace ${shortDistance}`;
+      return `${shortDistance}`;
     } else {
       return parsedDate.toLocaleDateString("es-ES");
     }
