@@ -12,7 +12,7 @@ interface ModulesContextType {
 const ModulesContext = createContext<ModulesContextType | undefined>(undefined);
 
 export const ModulesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [modules, setModules] = useState<string[]>(['Bible']);
+  const [modules, setModules] = useState<string[]>(['Versiculos']);
 
   const addModule = (moduleName: string) => {
     setModules([...modules, moduleName]);

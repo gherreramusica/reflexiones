@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Slider from "react-slick";
-import Bible from "../Bible/page";
+import Versiculos from "../Versiculos/page";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useModules } from "@/context/modulesContext";
@@ -68,8 +68,8 @@ const Carousel: React.FC = () => {
 
   const renderModule = (moduleName: string) => {
     switch (moduleName) {
-      case "Bible":
-        return <Bible />;
+      case "Versiculos":
+        return <Versiculos />;
       case "Calculadora":
         return <Calculadora />;
       default:

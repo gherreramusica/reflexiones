@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-export default function Bible() {
+export default function Versiculos() {
   const [verse, setVerse] = useState("Cargando versículo...");
   const [loadingVerse, setLoadingVerse] = useState(true);
   const [selectedBook, setSelectedBook] = useState("");
