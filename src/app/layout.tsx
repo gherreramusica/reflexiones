@@ -1,18 +1,9 @@
 "use client";
 
 import "./globals.css";
-import { useAuth } from "@/hooks/useAuth";
-import Link from "next/link";
-import {
-  Bars3Icon,
-  UserIcon,
-  Cog6ToothIcon,
-  QuestionMarkCircleIcon,
-  ArrowRightOnRectangleIcon,
-} from "@heroicons/react/24/outline";
-import Image from "next/image";
+
 import Sidebar from "@/components/sidebar/sidebar/page";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Poppins } from "next/font/google";
 import { ModulesProvider } from "@/context/modulesContext"
 import Carousel from "@/components/carousel/page";

@@ -32,10 +32,15 @@ export default function Header() {
   const [avatar, setAvatar] = useState<string | null>(null);
   const { user, logout, isAuthenticated } = useAuth();
   const [bible, setBible] = useState(false);
-  const [capitulo, setCapitulo] = useState<Capitulo | null>(null);
   const [book, setBook] = useState("salmos"); // 📖 Libro por defecto
   const [chapter, setChapter] = useState(1); // 🔢 Capítulo por defecto
   const [loading, setLoading] = useState(false); // ⏳ Estado de carga
+  const [capitulo, setCapitulo] = useState<{ 
+    chapter: number; 
+    name: string; 
+    vers: Versiculo[]; 
+  }>({ chapter: 1, name: "", vers: [] });
+  
 
 
   useEffect(() => {
