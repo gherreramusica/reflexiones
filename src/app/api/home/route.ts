@@ -5,19 +5,18 @@ import { NextResponse, NextRequest } from "next/server";
 export async function GET() {
   try {
     await connectDB();
+    console.log("✅ MongoDB connected successfully");
+
     const notes = await Note.find()
       .populate("author", "name username email avatar")
       .sort({ createdAt: -1 });
 
-    console.log("📢 Datos enviados desde la API:", JSON.stringify(notes, null, 2));
+    
 
     return NextResponse.json(notes);
   } catch (error) {
-    console.error("❌ Error en GET:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Error al obtener notas" },
-      { status: 500 }
-    );
+    console.error("❌ API Error:", error);
+    return NextResponse.json({ error: "Failed to fetch notes" }, { status: 500 });
   }
 }
 

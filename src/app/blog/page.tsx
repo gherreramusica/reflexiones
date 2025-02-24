@@ -8,7 +8,6 @@ import { es } from "date-fns/locale";
 import { MoreHorizontal } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-
 interface Post {
   _id: string;
   author: {
@@ -33,7 +32,6 @@ export default function Blog() {
   const [post, setPost] = useState<Post[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-
   useEffect(() => {
     fetch("/api/posts")
       .then((res) => res.json())
@@ -48,33 +46,33 @@ export default function Blog() {
 
   const formatDate = (post: Post) => {
     const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
-  
+
     if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
-  
+
     let parsedDate = new Date(dateString);
-  
+
     // Si `dateString` no es válido, intenta parsearlo
     if (isNaN(parsedDate.getTime())) {
       parsedDate = new Date(Date.parse(dateString));
     }
-  
+
     // Si sigue sin ser una fecha válida, muestra error
     if (isNaN(parsedDate.getTime())) {
       console.error("Error al convertir la fecha:", dateString);
       return "Fecha inválida";
     }
-  
+
     const now = new Date();
     const diffInDays = Math.floor(
       (now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-  
+
     if (diffInDays < 30) {
       const distance = formatDistanceToNowStrict(parsedDate, {
         addSuffix: false,
         locale: es,
       });
-  
+
       // Acortar el resultado
       const shortDistance = distance
         .replace("años", "a")
@@ -89,7 +87,7 @@ export default function Blog() {
         .replace("minuto", "m")
         .replace("segundos", "s")
         .replace("segundo", "s");
-  
+
       return `${shortDistance}`;
     } else {
       return parsedDate.toLocaleDateString("es-ES");
@@ -99,28 +97,50 @@ export default function Blog() {
   const handleDeletePost = async (postId: string) => {
     try {
       console.log("Intentando eliminar post con ID:", postId);
-  
+
       const res = await fetch(`/api/posts/${postId}`, {
         method: "DELETE",
       });
-  
+
       if (!res.ok) {
         const errorData = await res.json();
         console.error("Error al eliminar post:", errorData);
         return;
       }
-  
+
       setPost((prevPosts) => prevPosts.filter((p) => p._id !== postId));
       setSelectedPostId(null);
     } catch (error) {
       console.error("Error en la solicitud de eliminación:", error);
     }
   };
-  
+
+  const handleSaveArticle = async (postId: string, userId: string) => {
+    try {
+      console.log("📢 Enviando a API:", { userId, postId });
+
+      const res = await fetch("/api/saved-posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, postId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Error al guardar el post");
+      }
+
+      console.log("✅ Post guardado correctamente:", data);
+    } catch (error) {
+      console.error("❌ Error al guardar el post:", error);
+    }
+  };
 
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)]  m-auto relative max-w-[90%] lg:max-w-[500px]">
-   
       {/* Overlay oscuro cuando el input está activo */}
       {input && (
         <div
@@ -275,7 +295,9 @@ export default function Blog() {
                               {/* Reportar */}
                               <button
                                 className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                                onClick={() => console.log("Reportar", post._id)}
+                                onClick={() =>
+                                  console.log("Reportar", post._id)
+                                }
                               >
                                 Reportar
                               </button>
@@ -290,16 +312,14 @@ export default function Blog() {
                       <div className="bg-gray-300 h-[200px] relative grid place-content-center w-full">
                         {post.image && (
                           <Image
-                          fill
-                          src={post?.image || "/images/R.png"}
-                          alt="Post Image"
-                          className="object-cover w-full h-full"
-                          background-size="cover"
-                          background-position="top"
-                          background-repeat="no-repeat"
-
-                        />
-                        
+                            fill
+                            src={post?.image || "/images/R.png"}
+                            alt="Post Image"
+                            className="object-cover w-full h-full"
+                            background-size="cover"
+                            background-position="top"
+                            background-repeat="no-repeat"
+                          />
                         )}
                       </div>
                       <div className="p-3">
@@ -323,7 +343,18 @@ export default function Blog() {
                   {/* Íconos fuera del Link para evitar que sean clickeables */}
                   <div className="flex space-x-2 mt-2 text-gray-500">
                     <HandThumbUpIcon className="w-5 h-5" />
-                    <BookmarkIcon className="w-5 h-5" />
+                    <BookmarkIcon
+                      onClick={() => {
+                        if (user?.id) {
+                          handleSaveArticle(post._id, user.id);
+                        } else {
+                          console.error(
+                            "❌ Usuario no autenticado, no se puede guardar."
+                          );
+                        }
+                      }}
+                      className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
+                    />
                   </div>
                 </div>
               </li>

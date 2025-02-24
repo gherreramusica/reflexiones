@@ -9,22 +9,22 @@ export async function GET() {
     const cookieStore = await cookies();
     const token = cookieStore.get("token");
 
-    console.log("🔍 Token recibido:", token);
+    
 
     if (!token) {
-      console.log("⚠️ No se encontró el token en las cookies");
+      
       return NextResponse.json({ authenticated: false });
     }
 
     const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
-    console.log("✅ Token decodificado:", decoded);
+
 
     await connectDB();
     const user = await User.findById(decoded.userId);
-    console.log("👤 Usuario encontrado:", user);
+
 
     if (!user) {
-      console.log("⚠️ Usuario no encontrado en la base de datos");
+     
       return NextResponse.json({ authenticated: false });
     }
 
@@ -40,7 +40,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error("❌ Error en la autenticación:", error);
+ 
     return NextResponse.json({ authenticated: false });
   }
 }

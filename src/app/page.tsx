@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
+import Header from "@/components/header/page"
 
 export default function LandingPage() {
   return (
@@ -14,9 +15,9 @@ export default function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Link className="flex items-center justify-center" href="#">
-          <span className="font-bold text-lg text-green-500">Reflexiones y Dichos</span>
-        </Link>
+      
+          <Header/>
+     
       </motion.header>
       <main className="flex-1 flex flex-col items-center justify-center">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 flex items-center justify-center relative overflow-hidden">

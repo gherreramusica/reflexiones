@@ -8,8 +8,6 @@ import { es } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
 import { MoreHorizontal } from "lucide-react";
 
-
-
 interface Post {
   _id: string;
   author: {
@@ -28,13 +26,13 @@ interface Post {
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
-  const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [input, showInput] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -126,33 +124,33 @@ export default function Home() {
 
   const formatDate = (post: Post) => {
     const dateString = post.createdAt || post.timestamp; // Usa createdAt o timestamp
-  
+
     if (!dateString) return "Fecha desconocida"; // Si no hay fecha válida
-  
+
     let parsedDate = new Date(dateString);
-  
+
     // Si `dateString` no es válido, intenta parsearlo
     if (isNaN(parsedDate.getTime())) {
       parsedDate = new Date(Date.parse(dateString));
     }
-  
+
     // Si sigue sin ser una fecha válida, muestra error
     if (isNaN(parsedDate.getTime())) {
       console.error("Error al convertir la fecha:", dateString);
       return "Fecha inválida";
     }
-  
+
     const now = new Date();
     const diffInDays = Math.floor(
       (now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-  
+
     if (diffInDays < 30) {
       const distance = formatDistanceToNowStrict(parsedDate, {
         addSuffix: false,
         locale: es,
       });
-  
+
       // Acortar el resultado
       const shortDistance = distance
         .replace("años", "a")
@@ -167,7 +165,7 @@ export default function Home() {
         .replace("minuto", "m")
         .replace("segundos", "s")
         .replace("segundo", "s");
-  
+
       return `${shortDistance}`;
     } else {
       return parsedDate.toLocaleDateString("es-ES");
@@ -215,6 +213,29 @@ export default function Home() {
     }
   };
 
+  const handleBookmark = async (noteId: string, userId: string) => {
+    try {
+      // Debug: Verificar los datos antes de enviarlos
+      console.log("📢 Enviando a API:", { userId, noteId });
+
+      const res = await fetch("/api/saved-posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, noteId }), // Datos enviados
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to save post");
+      }
+
+      console.log("✅ Post guardado correctamente:", data);
+    } catch (error) {
+      console.error("❌ Error al guardar post:", error);
+    }
+  };
+
   return (
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[500px] w-[90%] lg:max-w-[500px] m-auto relative">
       <div
@@ -224,7 +245,7 @@ export default function Home() {
       >
         <h4>Mensaje Enviado</h4>
       </div>
-    
+
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
@@ -314,10 +335,9 @@ export default function Home() {
                       <Image
                         width={30}
                         height={30}
-                        src={ p.author.avatar || "/images/avatar.png"} // Use author's avatar with fallback
+                        src={p.author.avatar || "/images/avatar.png"} // Use author's avatar with fallback
                         alt={"avatar"}
                         className="object-cover rounded-full"
-
                       />
                     </div>
                     <div className="w-full">
@@ -328,7 +348,8 @@ export default function Home() {
                           </p>
 
                           <p className="text-sm text-gray-400">
-                            @{typeof p.author === "string"
+                            @
+                            {typeof p.author === "string"
                               ? p.author
                               : p.author?.username}
                           </p>
@@ -401,7 +422,18 @@ export default function Home() {
                           onClick={() => handleLike(p._id)}
                         />
                         <span className="text-sm text-gray-600">{p.likes}</span>
-                        <BookmarkIcon className="w-5 h-5" />
+                        <BookmarkIcon
+                          onClick={() => {
+                            if (user && user.id) {
+                              handleBookmark(p._id, user.id);
+                            } else {
+                              console.error(
+                                "❌ Usuario no autenticado, no se puede guardar."
+                              );
+                            }
+                          }}
+                          className="w-5 h-5 cursor-pointer text-gray-500 hover:text-blue-500"
+                        />
                       </div>
                     </div>
                   </li>

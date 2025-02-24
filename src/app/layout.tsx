@@ -9,6 +9,7 @@ import Tab from "@/components/tab/page";
 import Header from "@/components/header/page";
 
 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en" className={poppins.variable}>
       <body className="font-sans">
         <ModulesProvider>
+        
           {excludePaths.includes(pathname) ? (
             children
           ) : (
@@ -46,7 +48,9 @@ export default function RootLayout({
               <main>{children}</main>
             </div>
           )}
+       
         </ModulesProvider>
+        
       </body>
     </html>
   );
