@@ -40,7 +40,7 @@ export async function GET() {
       }
     });
   } catch (error) {
- 
+    console.error("Error en la verificación de autenticación:", error);
     return NextResponse.json({ authenticated: false });
   }
 }

@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
@@ -116,104 +115,7 @@ export default function LandingPage() {
             </motion.div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6 mx-auto">
-            <motion.h2
-              className="text-3xl font-bold text-center mb-12 text-green-700"
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              Reflexiones Destacadas
-            </motion.h2>
-            <motion.div
-              className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={{
-                visible: { transition: { staggerChildren: 0.1 } },
-              }}
-            >
-              {[1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
-                  variants={{
-                    hidden: { opacity: 0, scale: 0.8 },
-                    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-                  }}
-                >
-                  <Image
-                    src={`/placeholder.svg?height=200&width=400&text=Reflexión ${i}`}
-                    alt={`Reflexión ${i}`}
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <p className="text-gray-600 italic">
-                      "La vida es lo que pasa mientras estás ocupado haciendo otros planes."
-                    </p>
-                    <p className="text-green-600 mt-2 font-semibold">- John Lennon</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-green-50">
-          <div className="container px-4 md:px-6 mx-auto">
-            <motion.div
-              className="flex flex-col md:flex-row items-center justify-between gap-8"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-              }}
-            >
-              <motion.div
-                className="md:w-1/2"
-                variants={{
-                  hidden: { opacity: 0, x: -50 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-                }}
-              >
-                <h2 className="text-3xl font-bold mb-4 text-green-700">Descubre Nuevas Perspectivas</h2>
-                <p className="text-gray-600 mb-6">
-                  Explora nuestra extensa colección de reflexiones y dichos que te inspirarán y te harán pensar. Cada
-                  día es una oportunidad para crecer y aprender.
-                </p>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/explore"
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-green-500 px-8 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
-                  >
-                    Explorar Más
-                  </Link>
-                </motion.div>
-              </motion.div>
-              <motion.div
-                className="md:w-1/2"
-                variants={{
-                  hidden: { opacity: 0, x: 50 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-                }}
-              >
-                <Image
-                  src="/placeholder.svg?height=300&width=500&text=Collage de Citas"
-                  alt="Collage de Citas"
-                  width={500}
-                  height={300}
-                  className="rounded-lg shadow-md"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
+        
       </main>
       <motion.footer
         className="w-full py-6 flex flex-col sm:flex-row justify-center items-center px-4 md:px-6 border-t border-green-100 gap-2"
