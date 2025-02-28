@@ -7,6 +7,9 @@ import Carousel from "@/components/carousel/page";
 import { usePathname } from "next/navigation";
 import Tab from "@/components/tab/page";
 import Header from "@/components/header/page";
+import { useState } from "react";
+import Sidebar from "@/components/sidebar/page";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,12 +22,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-
-  // Excluded paths array
   const excludePaths = ["/", "/login", "/register", "/editor"];
-
-  // Function to check if the pathname is excluded
   const isExcluded = (path: string) => {
     return excludePaths.includes(path) || path.startsWith("/post/");
   };
@@ -40,7 +40,8 @@ export default function RootLayout({
               <h1 className="fixed top-[45%] left-[-15%] hidden lg:block text-[100px] font-bold text-gray-100 rotate-90">
                 REFLEXIONES
               </h1>
-              <Header />
+              <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+              <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
               {/* Contenido principal */}
               <div className="pl-4 pr-4">
                 <Carousel />

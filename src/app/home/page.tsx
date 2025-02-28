@@ -33,6 +33,7 @@ export default function Home() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [input, showInput] = useState(false);
+ 
 
   useEffect(() => {
     if (user) {

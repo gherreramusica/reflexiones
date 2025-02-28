@@ -20,8 +20,7 @@ interface Versiculo {
   id: number; // ID único
 }
 
-export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function Header({isMenuOpen, setIsMenuOpen}: {isMenuOpen: boolean, setIsMenuOpen: (isOpen: boolean) => void}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const { user, logout, isAuthenticated } = useAuth();
@@ -29,7 +28,6 @@ export default function Header() {
   const [book, setBook] = useState("salmos"); // 📖 Libro por defecto
   const [chapter, setChapter] = useState(1); // 🔢 Capítulo por defecto
   const [loading, setLoading] = useState(false); // ⏳ Estado de carga
-
   const [capitulo, setCapitulo] = useState<{
     chapter: number;
     name: string;
@@ -57,7 +55,7 @@ export default function Header() {
       });
   }, [book, chapter]); // ✅ Mantén siempre el mismo tamaño en este array
 
-  const handleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const handleMenu = () => setIsMenuOpen(true);
   const handleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const handleBible = () => setBible(!bible);
 
@@ -155,17 +153,6 @@ export default function Header() {
           </Link>
         )}
       </div>
-      {/* Sidebar */}
-      <div
-        className={`fixed top-[5%] left-0 z-50 w-[100%] h-full  text-white transition-all duration-300 ease-in-out transform ${
-          isMenuOpen
-            ? "translate-x-0 opacity-100"
-            : "-translate-x-full opacity-0"
-        }`}
-      >
-        <Sidebar />
-      </div>
-
       {/* Modal de la Biblia */}
       {bible && (
         <div className="flex flex-col bg-white w-full fixed top-0 left-0 h-[100%] overflow-y-auto z-50">
