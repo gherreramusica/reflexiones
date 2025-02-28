@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { es } from "date-fns/locale";
-import Carousel from "@/components/carousel/page";
 import { useAuth } from "@/hooks/useAuth";
 import { MoreHorizontal } from "lucide-react";
 
@@ -31,7 +30,6 @@ export default function UserPage() {
   const [input, showInput] = useState(false);
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
-  const pathname = usePathname();
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
