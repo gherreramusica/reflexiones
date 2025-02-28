@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
-import Sidebar from "../sidebar/sidebar/page";
+import Sidebar from "../sidebar/page";
 
 // Define la estructura del versículo
 interface Versiculo {

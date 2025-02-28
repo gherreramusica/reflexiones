@@ -2,13 +2,11 @@
 
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import { ModulesProvider } from "@/context/modulesContext"
+import { ModulesProvider } from "@/context/modulesContext";
 import Carousel from "@/components/carousel/page";
 import { usePathname } from "next/navigation";
 import Tab from "@/components/tab/page";
 import Header from "@/components/header/page";
-
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,25 +19,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   const pathname = usePathname();
+
+  // Excluded paths array
   const excludePaths = ["/", "/login", "/register", "/editor"];
 
-  
+  // Function to check if the pathname is excluded
+  const isExcluded = (path: string) => {
+    return excludePaths.includes(path) || path.startsWith("/post/");
+  };
+
   return (
     <html lang="en" className={poppins.variable}>
       <body className="font-sans">
         <ModulesProvider>
-        
-          {excludePaths.includes(pathname) ? (
+          {isExcluded(pathname) ? ( // ✅ Use isExcluded() instead of excludePaths.includes()
             children
           ) : (
             <div className="h-screen flex flex-col relative">
               <h1 className="fixed top-[45%] left-[-15%] hidden lg:block text-[100px] font-bold text-gray-100 rotate-90">
                 REFLEXIONES
               </h1>
-             <Header/>
+              <Header />
               {/* Contenido principal */}
               <div className="pl-4 pr-4">
                 <Carousel />
@@ -48,12 +49,8 @@ export default function RootLayout({
               <main>{children}</main>
             </div>
           )}
-       
         </ModulesProvider>
-        
       </body>
     </html>
   );
 }
-
-

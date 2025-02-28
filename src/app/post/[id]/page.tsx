@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Post {
   id: string;
   title: string;
   extract?: string;
   image?: string;
-  author?: string;
+  author?: {
+    name: string;
+    avatar: string;
+  };
   content: string;
 }
 
@@ -20,6 +23,14 @@ export default function SinglePost() {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  <button
+    onClick={() => router.push(`/editor/${post?.id}`)}
+    className="p-2 rounded-md hover:bg-gray-200 transition"
+  >
+    Edit Post
+  </button>;
 
   useEffect(() => {
     if (!id) return;
@@ -54,19 +65,40 @@ export default function SinglePost() {
 
   return (
     <div>
-      <header className="p-3 bg-white text-black text-center text-3xl font-bold">
-        <div className="relative w-fit flex gap-3 items-center">
-        <button 
-              onClick={() => window.history.back()} 
-              className="p-2 rounded-md hover:bg-gray-200 transition"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-700" />
-            </button>
-          <Link href="/home">
-            <h1 className="relative text-3xl font-bold before:content-[''] before:absolute before:right-[0] before:bottom-[-5] before:text-blue-500 before:w-[10px] before:h-[10px] before:bg-green-400">
-              R
-            </h1>
-          </Link>
+      <header className="p-4">
+        <div>
+          <ul className="flex justify-between items-center">
+            <li className="flex gap-2 items-center">
+              <button
+                onClick={() => window.history.back()}
+                className="p-2 rounded-md hover:bg-gray-200 transition"
+              >
+                <ArrowLeft className="w-6 h-6 text-gray-700" />
+              </button>
+              <h1 className="relative text-3xl font-bold before:content-[''] before:block before:absolute before:right-0 before:bottom-[-5px] before:w-[10px] before:h-[10px] before:bg-green-400 before:text-blue-500">
+                R
+              </h1>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  if (post?.id) {
+                    router.push(`/editor/${post.id}`);
+                  } else {
+                    console.warn("Post ID is not available yet.");
+                  }
+                }}
+                disabled={!post?.id}
+                className={`p-2 rounded-md transition ${
+                  post?.id
+                    ? "hover:bg-gray-200"
+                    : "opacity-50 cursor-not-allowed"
+                }`}
+              >
+                Edit Post
+              </button>
+            </li>
+          </ul>
         </div>
       </header>
       <div className="max-w-3xl mx-auto mt-5 p-6 ">
@@ -74,9 +106,14 @@ export default function SinglePost() {
         {post.extract && <p className="text-gray-500">{post.extract}</p>}
 
         {post.author && (
-          <p className="text-sm text-gray-400">Escrito por: {post.author}</p>
+          <p className="text-sm text-gray-400">
+            Escrito por: {post.author.name}
+          </p>
         )}
-        <div className="mt-4 text-lg">{post.content}</div>
+        <div
+          className="mt-4 text-lg"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
       </div>
     </div>
   );

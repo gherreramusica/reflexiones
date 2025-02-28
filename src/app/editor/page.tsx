@@ -8,6 +8,8 @@ import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+import Paragraph from "@tiptap/extension-paragraph";
+import HardBreak from "@tiptap/extension-hard-break";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image"; // Importar extensión de imagen
 import { ArrowLeft } from "lucide-react"; // Importar icono de back
@@ -22,6 +24,7 @@ const TiptapEditor = () => {
   const editor = useEditor({
     extensions: [
       StarterKit, // NO eliminamos paragraph para evitar errores
+      Paragraph,
       Bold,
       Italic,
       Underline,
@@ -29,6 +32,9 @@ const TiptapEditor = () => {
       OrderedList,
       Link,
       Image, // Agregar extensión de imagen
+      HardBreak.configure({
+        keepMarks: true, // Keeps bold/italic styles when breaking lines
+      }),
       Placeholder.configure({
         placeholder: "Escribe tu reflexión aquí...",
         showOnlyWhenEditable: true,

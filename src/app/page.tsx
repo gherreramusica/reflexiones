@@ -3,20 +3,19 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
-import Header from "@/components/header/page"
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-100">
       <motion.header
         className="px-4 lg:px-6 h-14 flex items-center justify-center border-b border-green-500"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-      
-          <Header/>
-     
+        <Link className="flex items-center justify-center" href="#">
+          <span className="font-bold text-lg text-green-400">Reflexiones y Dichos</span>
+        </Link>
       </motion.header>
       <main className="flex-1 flex flex-col items-center justify-center">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 flex items-center justify-center relative overflow-hidden">
@@ -43,15 +42,15 @@ export default function LandingPage() {
             >
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Bienvenido a <span className="text-green-500">Reflexiones y Dichos</span>
+                  Bienvenido a <span className="text-green-400">Reflexiones y Dichos</span>
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl">
                   Descubre sabiduría en cada palabra. Explora nuestra colección de reflexiones y dichos inspiradores.
                 </p>
               </div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-green-500 px-8 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-green-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:pointer-events-none disabled:opacity-50"
+                  className="inline-flex h-10 items-center justify-center rounded-md bg-green-500 px-8 py-2 text-sm font-medium text-gray-900 shadow transition-colors hover:bg-green-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:pointer-events-none disabled:opacity-50"
                   href="/login"
                 >
                   Empezar
@@ -61,7 +60,7 @@ export default function LandingPage() {
             </motion.div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-green-50">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-800">
           <div className="container px-4 md:px-6 mx-auto">
             <motion.div
               className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 justify-items-center"
@@ -85,13 +84,13 @@ export default function LandingPage() {
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  className="flex flex-col items-center space-y-2 p-4 rounded-lg max-w-xs w-full bg-white shadow-md border border-green-100"
+                  className="flex flex-col items-center space-y-2 p-4 rounded-lg max-w-xs w-full bg-gray-700 shadow-md border border-green-500"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
                   }}
                 >
-                  <div className="p-2 bg-green-500 rounded-full text-white">
+                  <div className="p-2 bg-green-500 rounded-full text-gray-900">
                     <svg
                       className="h-6 w-6"
                       fill="none"
@@ -108,8 +107,8 @@ export default function LandingPage() {
                       <path d="m9 12 2 2 4-4" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-green-700">{item.title}</h2>
-                  <p className="text-sm text-gray-500 text-center">{item.description}</p>
+                  <h2 className="text-xl font-bold text-green-400">{item.title}</h2>
+                  <p className="text-sm text-gray-300 text-center">{item.description}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -118,17 +117,17 @@ export default function LandingPage() {
         
       </main>
       <motion.footer
-        className="w-full py-6 flex flex-col sm:flex-row justify-center items-center px-4 md:px-6 border-t border-green-100 gap-2"
+        className="w-full py-6 flex flex-col sm:flex-row justify-center items-center px-4 md:px-6 border-t border-green-500 gap-2"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <p className="text-xs text-gray-500 text-center">© 2024 Reflexiones y Dichos. Todos los derechos reservados.</p>
+        <p className="text-xs text-gray-400 text-center">© 2024 Reflexiones y Dichos. Todos los derechos reservados.</p>
         <nav className="flex gap-4 sm:gap-6 justify-center">
-          <Link className="text-xs hover:underline underline-offset-4 text-green-600" href="#">
+          <Link className="text-xs hover:underline underline-offset-4 text-green-400" href="#">
             Términos de Servicio
           </Link>
-          <Link className="text-xs hover:underline underline-offset-4 text-green-600" href="#">
+          <Link className="text-xs hover:underline underline-offset-4 text-green-400" href="#">
             Privacidad
           </Link>
         </nav>

@@ -1,21 +1,23 @@
-import { NextResponse, NextRequest } from "next/server";
-import { connectDB } from "@/lib/mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import Post from "@/models/Post";
-import { ObjectId } from "mongodb";
+import { connectDB } from '@/lib/mongodb';
 
 export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
-    // Obtener el ID desde la URL
+    // Extract the ID from the URL
     const url = new URL(req.url);
-    const id = url.pathname.split("/").pop(); // Extrae el último segmento de la URL
+    const id = url.pathname.split("/").pop(); // Extracts last part of the path
 
-    if (!id || !ObjectId.isValid(id)) {
+    // Check if ID is valid
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
-    const post = await Post.findById(new ObjectId(id));
+    // Find the post and populate only the 'name' field of the author
+    const post = await Post.findById(id).populate("author", "name");
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -25,43 +27,5 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching post:", error);
     return NextResponse.json({ error: "Error fetching post" }, { status: 500 });
-  }
-}
-
-
-
-export async function DELETE(request: NextRequest) {
-  try {
-    await connectDB();
-
-    // Extract ID from the request URL
-    const url = new URL(request.url);
-    const id = url.pathname.split("/").pop();
-
-    // Validate the ID
-    if (!id || !ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { error: "Invalid ID format" },
-        { status: 400 }
-      );
-    }
-
-    // Convert id to ObjectId and delete the post
-    const deletedPost = await Post.findByIdAndDelete(new ObjectId(id));
-
-    if (!deletedPost) {
-      return NextResponse.json(
-        { error: "Post not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ message: "Post successfully deleted" });
-  } catch (error) {
-    console.error("Error deleting post:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
   }
 }

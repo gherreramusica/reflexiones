@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -35,6 +35,7 @@ export default function UserPage() {
   const [successMessage, setSuccessMessage] = useState(false);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   const handleMenuClick = (postId: string) => {
     setSelectedPostId(selectedPostId === postId ? null : postId);
@@ -82,6 +83,12 @@ export default function UserPage() {
       console.error("Error creating post:", error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      setAvatar(user?.avatar || "/images/avatar.png");
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -193,19 +200,29 @@ export default function UserPage() {
     <section className="bg-[radial-gradient(#000_1px,transparent_1px)] max-w-[90%] lg:max-w-[500px] m-auto relative">
       <div className="flex justify-between text-gray-800  mt-10">
         <div>
-        <h2 className="text-center text-2xl font-bold">Martin Herrera</h2>
-        <p>@gherreramusica</p>
-        <p className="mt-8">Lorem ipsum dolor </p>
-        <p className="mt-4">300 seguidores</p>
+          <h2 className="text-left text-2xl font-bold">{user?.name}</h2>
+          <p>@{user?.username}</p>
+          <p className="mt-8">{user?.bio}</p>
+          <p className="mt-4">300 seguidores</p>
         </div>
-        <div className="w-[100px] h-[100px] rounded-full shadow-md border"></div>
-
+        <div>
+        <Image
+                width={250}
+                height={250}
+                src={ avatar || "/images/avatar.jpeg"}
+                alt="avatar"
+                className="object-cover border rounded-full overflow-hidden shadow-md shadow-gray-300"
+              />
+        </div>
       </div>
       <div className="flex justify-between gap-3 mt-5">
-        <button className="p-2 rounded-lg bg-green-500 w-full">New Post</button>
-        <button className="p-2  rounded-lg bg-green-500 w-full">Edit Profile</button>
+        <button className="p-2 rounded-lg text-white bg-green-500 w-full">New Post</button>
+        <Link className="p-2 text-center text-white  rounded-lg bg-green-500 w-full" href={"/edit"}>
+        Edit Profile
+        </Link>
+     
       </div>
-      
+
       <div
         className={`${
           successMessage ? "block" : "hidden"
@@ -213,40 +230,7 @@ export default function UserPage() {
       >
         <h4>Mensaje Enviado</h4>
       </div>
-      <div>
-        <Carousel />
-      </div>
-      <div>
-        <ul className="flex gap-3 justify-center">
-          <Link href="/home">
-            <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/home" ? "border font-bold" : ""
-              }`}
-            >
-              Notes
-            </li>
-          </Link>
-          <Link href="/blog">
-            <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/blog" ? "border text-white font-bold" : ""
-              }`}
-            >
-              Articles
-            </li>
-          </Link>
-          <Link href="/saves">
-            <li
-              className={`bg-gray-100 p-2 rounded-md ${
-                pathname === "/saves" ? "border text-white font-bold" : ""
-              }`}
-            >
-              Saves
-            </li>
-          </Link>
-        </ul>
-      </div>
+
       {input && (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[20]"
@@ -265,13 +249,13 @@ export default function UserPage() {
               <Image
                 width={40}
                 height={40}
-                src="/images/avatar.jpeg"
+                src={ avatar || "/images/avatar.jpeg"}
                 alt="avatar"
                 className="object-cover rounded-full"
               />
             </div>
             <div className="w-full">
-              <p>Martin Herrera</p>
+              <p>{user?.name}</p>
               <textarea
                 className="w-full outline-none resize-none overflow-auto break-words"
                 placeholder="Escribe aquí..."
@@ -324,7 +308,10 @@ export default function UserPage() {
               </p>
             ) : (
               posts.map((p) => (
-                <li key={p._id} className="border-b flex gap-2 py-4 px-0 bg-white">
+                <li
+                  key={p._id}
+                  className="border-b flex gap-2 py-4 px-0 bg-white"
+                >
                   <div>
                     <Image
                       width={30}

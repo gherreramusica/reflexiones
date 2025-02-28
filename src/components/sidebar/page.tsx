@@ -15,7 +15,7 @@ const Sidebar: React.FC = () => {
         <div>
           <button
             onClick={() => addModule("Versiculos")}
-            className="mb-2 text-gray-500 rounded-md"
+            className="mb-2 text-gray-500 text-sm rounded-md"
           >
             Versiculos +
           </button>
@@ -23,7 +23,7 @@ const Sidebar: React.FC = () => {
         <div>
           <button
             onClick={() => addModule("Calculadora")}
-            className="mb-2  text-gray-500 rounded-md"
+            className="mb-2  text-gray-500 text-sm rounded-md"
           >
             Calculadora +
           </button>
@@ -31,7 +31,7 @@ const Sidebar: React.FC = () => {
         <div>
           <button
             onClick={() => addModule("Bible")}
-            className="mb-2 text-gray-500 rounded-md"
+            className="mb-2 text-gray-500 text-sm rounded-md"
           >
             Bible +
           </button>
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
         <div>
           <button
             onClick={() => addModule("Calculadora")}
-            className="mb-2  text-gray-500 rounded-md"
+            className="mb-2  text-gray-500 text-sm rounded-md"
           >
             Calculadora +
           </button>
@@ -50,18 +50,18 @@ const Sidebar: React.FC = () => {
         <h2 className="text-xl text-gray-500 font-bold mb-4">Links Útiles</h2>
         <div>
         <button 
-         className="mb-2  text-gray-500 rounded-md"
+         className="mb-2  text-sm text-gray-500 rounded-md"
          onClick={() => router.push('/cuenta')}><h2>Mi cuenta</h2></button>
  
         </div>
         <div>
-          <button className="mb-2  text-gray-500 rounded-md">Ayuda</button>
+          <button className="mb-2 text-sm  text-gray-500 rounded-md">Ayuda</button>
         </div>
         <div>
-          <button className="mb-2  text-gray-500 rounded-md">Notas</button>
+          <button className="mb-2 text-sm  text-gray-500 rounded-md">Notas</button>
         </div>
         <div>
-          <button className="mb-2  text-gray-500 rounded-md">Articles</button>
+          <button className="mb-2 text-sm  text-gray-500 rounded-md">Articles</button>
         </div>
       </div>
     </div>
