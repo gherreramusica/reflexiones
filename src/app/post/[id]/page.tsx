@@ -26,8 +26,15 @@ export default function SinglePost() {
   const router = useRouter();
 
   <button
-    onClick={() => router.push(`/editor/${post?.id}`)}
-    className="p-2 rounded-md hover:bg-gray-200 transition"
+    onClick={() => {
+      if (post?.id) {
+        router.push(`/editor/${post.id}`);
+      }
+    }}
+    disabled={!post?.id}
+    className={`p-2 rounded-md transition ${
+      post?.id ? "hover:bg-gray-200" : "opacity-50 cursor-not-allowed"
+    }`}
   >
     Edit Post
   </button>;
@@ -82,18 +89,11 @@ export default function SinglePost() {
             <li>
               <button
                 onClick={() => {
-                  if (post?.id) {
-                    router.push(`/editor/${post.id}`);
-                  } else {
-                    console.warn("Post ID is not available yet.");
+                  if (post?._id) {
+                    router.push(`/editor/${post._id.toString()}`);
                   }
                 }}
-                disabled={!post?.id}
-                className={`p-2 rounded-md transition ${
-                  post?.id
-                    ? "hover:bg-gray-200"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
+                className="p-2 rounded-md hover:bg-gray-200 transition"
               >
                 Edit Post
               </button>

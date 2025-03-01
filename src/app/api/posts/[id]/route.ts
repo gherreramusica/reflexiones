@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
 
     // Find the post and populate only the 'name' field of the author
     const post = await Post.findById(id).populate("author", "name");
+    console.log("Post:", post);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -29,3 +30,62 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Error fetching post" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    await connectDB();
+    
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+    }
+
+    const deletedPost = await Post.findByIdAndDelete(id);
+    
+    if (!deletedPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Post deleted successfully" });
+    
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    return NextResponse.json({ error: "Error deleting post" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    await connectDB();
+    
+    const url = new URL(request.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+    }
+
+    const { title, content, image, author } = await request.json();
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { title, content, image, author },
+      { new: true }
+    ).populate("author", "name");
+
+    if (!updatedPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedPost);
+    
+  } catch (error) {
+    console.error("Error updating post:", error);
+    return NextResponse.json({ error: "Error updating post" }, { status: 500 });
+  }
+}
+
+
+

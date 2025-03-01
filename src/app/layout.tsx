@@ -26,7 +26,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const excludePaths = ["/", "/login", "/register", "/editor"];
   const isExcluded = (path: string) => {
-    return excludePaths.includes(path) || path.startsWith("/post/");
+    return excludePaths.includes(path) || path.startsWith("/post/") || path.startsWith("/editor/");
   };
 
   return (
