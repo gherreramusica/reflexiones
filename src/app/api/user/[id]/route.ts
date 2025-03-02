@@ -8,7 +8,7 @@ export async function PATCH(req: NextRequest) {
     const url = new URL(req.url);
     const userId = url.pathname.split('/').pop(); // Obtiene el ID del usuario desde la URL
 
-    const { name, username, bio, avatar } = await req.json();
+    const { name, username, bio, avatar, modules } = await req.json(); // ✅ Ahora también recibimos `modules`
 
     if (!userId) {
       return NextResponse.json({ error: "ID de usuario requerido" }, { status: 400 });
@@ -19,9 +19,15 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Nombre y usuario son requeridos" }, { status: 400 });
     }
 
+    // ✅ Actualizar módulos si existen en la solicitud
+    const updateData: any = { name, username, bio, avatar };
+    if (modules) {
+      updateData.modules = modules; // Solo actualiza `modules` si está presente
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { name, username, bio, avatar },
+      updateData,
       { new: true, runValidators: true }
     );
 

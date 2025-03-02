@@ -48,30 +48,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// 🔹 Endpoint para ELIMINAR una tarea (DELETE)
-export async function DELETE(req: NextRequest) {
-  try {
-    await connectDB(); // Conectar a la BD
-    
-    const id = req.nextUrl.searchParams.get("id"); // Extraer el ID desde la URL
 
-    if (!id) {
-      return NextResponse.json({ message: "Task ID is required" }, { status: 400 });
-    }
-
-    const deletedTask = await Task.findByIdAndDelete(id); // Buscar y eliminar
-
-    if (!deletedTask) {
-      return NextResponse.json({ message: "Task not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 });
-
-  } catch (error) {
-    console.error("❌ Error deleting task:", error);
-    return NextResponse.json(
-      { message: "Error deleting task", error: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    );
-  }
-}

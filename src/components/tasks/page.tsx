@@ -40,37 +40,52 @@ export default function Tasks() {
 
       const newTask = await response.json();
 
-      // 🔥 Actualizar el estado inmediatamente con la nueva tarea
-      if (newTask._id) {
-        setTasks((prevTasks) => [newTask, ...prevTasks]); // Agregar al inicio de la lista
-      }
+      // Create a new task object that matches the Task interface
+      const taskToAdd: Task = {
+        _id: newTask._id,
+        task: taskInput
+      };
 
-      setTaskInput(""); // Limpiar input
+      setTasks((prevTasks) => [taskToAdd, ...prevTasks]);
+      setTaskInput("");
     } catch (error) {
       console.error("❌ Error adding task:", error);
     }
   };
 
-  // 🔹 Eliminar una tarea y actualizar el estado en tiempo real
   const handleDeleteTask = async (taskId: string) => {
+    if (!taskId) {
+      console.error("❌ No se proporcionó un ID para eliminar.");
+      return;
+    }
+  
     try {
-      const response = await fetch(`/api/tasks?id=${taskId}`, {
+      console.log(`📢 Intentando eliminar tarea con ID: ${taskId}`);
+  
+      const response = await fetch(`/api/tasks/${taskId}`, { // ✅ Asegúrate de que el ID está en la URL
         method: "DELETE",
       });
-
+  
+      const data = await response.json();
+      console.log("✅ Respuesta del servidor:", data);
+  
       if (response.ok) {
         setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+        console.log("✅ Tarea eliminada correctamente");
+      } else {
+        console.error("❌ Error deleting task:", data.message);
       }
     } catch (error) {
-      console.error("❌ Error deleting task:", error);
+      console.error("❌ Error en la petición DELETE:", error);
     }
-  };
+  };  
+  
 
   return (
     <div className="w-[90%] m-auto">
       {/* Input para agregar tareas */}
       <input
-        className="border mt-5 w-full h-[50px] outline-none p-2 text-gray-500"
+        className="border mt-5 w-full h-[50px] outline-none rounded-lg p-2 text-gray-500"
         type="text"
         placeholder="Escribe aquí..."
         value={taskInput}
@@ -85,7 +100,7 @@ export default function Tasks() {
       <div className="mt-5">
         <ul className="text-gray-500">
           {tasks.map((task) => (
-            <li key={task._id} className="border gap-3 flex items-center p-2 my-2">
+            <li key={task._id} className="border rounded-lg gap-3 flex items-center p-2 my-2">
               <input
                 type="checkbox"
                 onClick={() => {
