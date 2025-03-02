@@ -23,7 +23,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [modules, setModules] = useState<string[]>([]);
   const pathname = usePathname();
   const excludePaths = ["/", "/login", "/register", "/editor"];
   const isExcluded = (path: string) => {
