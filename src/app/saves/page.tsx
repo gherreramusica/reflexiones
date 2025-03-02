@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MoreHorizontal } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
@@ -68,7 +69,9 @@ export default function Saves() {
   return (
     <section className="max-w-[500px] w-[90%] lg:max-w-[500px] m-auto relative">
       {loading ? (
-        <p className="text-center text-gray-500">Cargando...</p>
+        <div className="flex justify-center items-center p-e mt-10">
+          <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+        </div>
       ) : savedPosts.length === 0 ? (
         <p className="text-center text-gray-500">No tienes posts guardados.</p>
       ) : (

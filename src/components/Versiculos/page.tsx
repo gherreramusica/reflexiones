@@ -140,14 +140,15 @@ export default function Versiculos() {
   };
 
   return (
-    <div>
-      <div className="p-4 rounded-b-lg bg-gray-200 text-center w-[100%]">
-        <p className="font-bold text-lg">📖 Versículo del Día:</p>
-        <p className="italic">{verse}</p>
-        
+    <div className="flex flex-col items-center justify-center px-5 w-full">
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-md w-full text-center">
+        <h2 className="text-2xl font-semibold mb-3">📖 Versículo del Día</h2>
+        <p className="italic text-lg">"{verse}"</p>
+
+        {/* Botón de actualizar versículo */}
         <button
           onClick={fetchRandomVerse}
-          className="mt-2 m-auto px-4 py-2 bg-black text-white rounded-md flex items-center gap-2"
+          className="mt-4 w-full px-4 py-2 rounded-lg bg-gray-900 text-white text-lg font-semibold flex justify-center items-center gap-2 hover:bg-gray-700 transition duration-200"
           disabled={loadingVerse}
         >
           {loadingVerse ? (
@@ -159,10 +160,11 @@ export default function Versiculos() {
           )}
         </button>
 
+        {/* Botón de mostrar capítulo completo */}
         <button
           onClick={fetchFullChapter}
-          className="mt-2 m-auto px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2"
-          disabled={loadingChapter || !selectedBook || !selectedChapter} // ✅ Evita llamadas innecesarias
+          className="mt-3 w-full px-4 py-2 rounded-lg bg-blue-800 text-white text-lg font-semibold flex justify-center items-center gap-2 hover:bg-blue-700 transition duration-200"
+          disabled={loadingChapter || !selectedBook || !selectedChapter}
         >
           {loadingChapter ? (
             <>
@@ -172,22 +174,25 @@ export default function Versiculos() {
             "Mostrar capítulo completo"
           )}
         </button>
+      </div>
 
-        {chapter && (
-          <div className={`mt-5 p-4 bg-gray-100 relative rounded-b-lg ${closeChapter ? "block" : "hidden"}`}>
+      {/* Contenedor del capítulo completo */}
+      {chapter && (
+        <div className="mt-6 p-5 bg-white rounded-xl shadow-md w-full text-gray-900">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">
+              📖 {booksDictionary[selectedBook as keyof typeof booksDictionary]} {selectedChapter}
+            </h3>
             <button
-              className="absolute font-bold top-0 left-0 p-3 underline"
+              className="text-blue-600 font-bold underline hover:text-blue-800 transition duration-200"
               onClick={handleCloseChapter}
             >
               {closeChapter ? "Ocultar" : "Mostrar"}
             </button>
-            <p className="font-bold text-lg">
-              📖 {booksDictionary[selectedBook as keyof typeof booksDictionary]} {selectedChapter}
-            </p>
-            <p className="text-gray-800 whitespace-pre-line">{chapter}</p>
           </div>
-        )}
-      </div>
+          <p className="mt-4 text-gray-800 whitespace-pre-line">{chapter}</p>
+        </div>
+      )}
     </div>
   );
 }

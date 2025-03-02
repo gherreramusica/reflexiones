@@ -1,84 +1,115 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export default function Calculadora() {
-  const [num1, setNum1] = useState<string>("");
-  const [num2, setNum2] = useState<string>("");
-  const [operation, setOperation] = useState<string>("");
-  const [result, setResult] = useState<number | string>("");
+  const [input, setInput] = useState<string>("");
+
+  const handleButtonClick = (value: string) => {
+    setInput((prev) => prev + value);
+  };
+
+  const handleClear = () => {
+    setInput("");
+  };
+
+  const handleBackspace = () => {
+    setInput((prev) => prev.slice(0, -1));
+  };
 
   const handleCalculate = () => {
-    const n1 = parseFloat(num1);
-    const n2 = parseFloat(num2);
-
-    if (isNaN(n1) || isNaN(n2)) {
-      setResult("Error: Ingresa números válidos");
-      return;
-    }
-
-    switch (operation) {
-      case "+":
-        setResult(n1 + n2);
-        break;
-      case "-":
-        setResult(n1 - n2);
-        break;
-      case "*":
-        setResult(n1 * n2);
-        break;
-      case "/":
-        setResult(n2 !== 0 ? n1 / n2 : "Error: División por cero");
-        break;
-      default:
-        setResult("Selecciona una operación");
+    try {
+      // Evaluar la expresión matemática
+      const result = eval(input);
+      setInput(result.toString());
+    } catch (error) {
+      setInput("Error");
     }
   };
 
   return (
-    <div>
-      {/* Calculadora */}
-      <div className=" p-4 bg-gray-200 text-center w-full  mx-auto ">
-        <h2 className="text-xl font-bold mb-4">Calculadora</h2>
-        <div className="space-y-2">
-          <input
-            type="number"
-            placeholder="Número 1"
-            value={num1}
-            onChange={(e) => setNum1(e.target.value)}
-            className="w-full p-2 rounded border"
-          />
-          <input
-            type="number"
-            placeholder="Número 2"
-            value={num2}
-            onChange={(e) => setNum2(e.target.value)}
-            className="w-full p-2 rounded border"
-          />
-          <select
-            value={operation}
-            onChange={(e) => setOperation(e.target.value)}
-            className="w-full p-2 rounded border"
-          >
-            <option value="">Selecciona operación</option>
-            <option value="+">+</option>
-            <option value="-">-</option>
-            <option value="*">×</option>
-            <option value="/">÷</option>
-          </select>
-          <button
-            onClick={handleCalculate}
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          >
-            Calcular
-          </button>
-        </div>
+    <div className="flex flex-col items-center bg-gray-900 p-5 shadow-md w-full mx-auto">
+      <h2 className="text-white text-2xl font-bold mb-4">Calculadora</h2>
 
-        {result !== "" && (
-          <div className="mt-4 text-center p-2 bg-gray-100 rounded">
-            <strong>Resultado: </strong> {result}
-          </div>
-        )}
+      {/* Pantalla de la calculadora */}
+      <div className="w-full bg-gray-800 text-right text-white p-4 text-3xl rounded-md mb-4 overflow-hidden">
+        {input || "0"}
+      </div>
+
+      {/* Botones */}
+      <div className="grid grid-cols-4 gap-2 w-full">
+        {/* Primera fila */}
+        <button
+          onClick={handleClear}
+          className="col-span-2 bg-red-500 hover:bg-red-600 text-white p-4 rounded-lg text-xl"
+        >
+          AC
+        </button>
+        <button
+          onClick={handleBackspace}
+          className="bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-lg text-xl"
+        >
+          ⌫
+        </button>
+        <button
+          onClick={() => handleButtonClick("/")}
+          className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg text-xl"
+        >
+          ÷
+        </button>
+
+        {/* Segunda fila */}
+        {["7", "8", "9", "*"].map((btn) => (
+          <button
+            key={btn}
+            onClick={() => handleButtonClick(btn)}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg text-xl"
+          >
+            {btn === "*" ? "×" : btn}
+          </button>
+        ))}
+
+        {/* Tercera fila */}
+        {["4", "5", "6", "-"].map((btn) => (
+          <button
+            key={btn}
+            onClick={() => handleButtonClick(btn)}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg text-xl"
+          >
+            {btn}
+          </button>
+        ))}
+
+        {/* Cuarta fila */}
+        {["1", "2", "3", "+"].map((btn) => (
+          <button
+            key={btn}
+            onClick={() => handleButtonClick(btn)}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg text-xl"
+          >
+            {btn}
+          </button>
+        ))}
+
+        {/* Última fila */}
+        <button
+          onClick={() => handleButtonClick("0")}
+          className="col-span-2 bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg text-xl"
+        >
+          0
+        </button>
+        <button
+          onClick={() => handleButtonClick(".")}
+          className="bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg text-xl"
+        >
+          .
+        </button>
+        <button
+          onClick={handleCalculate}
+          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg text-xl"
+        >
+          =
+        </button>
       </div>
     </div>
   );

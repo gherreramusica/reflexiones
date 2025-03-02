@@ -37,48 +37,37 @@ const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
 
 const Carousel: React.FC = () => {
   const { user } = useAuth();
-  const { modules, addModule, removeModule } = useModules(); // ✅ Use global state
+  const { modules, addModule, removeModule } = useModules();
   const [loading, setLoading] = useState(true);
-  const [minimized, setMinimized] = useState<{ [key: string]: boolean }>({});
+  const [hasFetched, setHasFetched] = useState(false);
+  const [allMinimized, setAllMinimized] = useState(false); // ✅ Controla si TODOS los módulos están minimizados
 
   useEffect(() => {
     const fetchModules = async () => {
-      if (!user?.id) return;
-  
+      if (!user?.id || hasFetched) return;
+
       try {
         setLoading(true);
         const response = await fetch(`/api/user/modules?userId=${user.id}`);
         const data = await response.json();
-        
+
         if (response.ok && Array.isArray(data.modules)) {
-          data.modules.forEach((module:string) => addModule(module)); // ✅ Usa la función de contexto
-          const minimizedState = (data.modules || []).reduce(
-            (acc: { [key: string]: boolean }, module: string) => {
-              acc[module] = true;
-              return acc;
-            },
-            {}
-          );
-          setMinimized(minimizedState);
-        } else {
-          console.error("❌ Error en la respuesta:", data.message || "Formato inesperado");
+          data.modules.forEach((module: string) => addModule(module));
         }
+
+        setHasFetched(true);
       } catch (error) {
         console.error("❌ Error obteniendo módulos:", error);
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchModules();
-  }, [user, addModule]); // ✅ Ahora `addModule` está en las dependencias
-   // ✅ Removed `modules` dependency to prevent infinite calls
 
-  const handleMinimize = (module: string) => {
-    setMinimized((prev) => ({
-      ...prev,
-      [module]: !prev[module],
-    }));
+    fetchModules();
+  }, [user, addModule, hasFetched]);
+
+  const handleMinimize = () => {
+    setAllMinimized((prev) => !prev); // ✅ Alternar entre minimizar y expandir TODOS los módulos
   };
 
   const renderModule = (moduleName: string) => {
@@ -126,7 +115,7 @@ const Carousel: React.FC = () => {
 
       if (response.ok) {
         console.log("✅ Módulo eliminado:", data);
-        removeModule(moduleName); // ✅ Updates global state
+        removeModule(moduleName);
       } else {
         console.error("❌ Error al eliminar módulo:", data.message);
       }
@@ -137,15 +126,16 @@ const Carousel: React.FC = () => {
 
   return (
     <div className="w-full m-auto">
-      {loading ? (
-        <p className="text-center text-gray-500">Cargando módulos...</p>
-      ) : (
+      {loading && modules.length > 0 ? (
+              <div className="flex justify-center mt-3 items-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+              </div>      ) : modules.length === 0 ? null : (
         <Slider {...settings}>
           {modules.map((module) => (
             <div key={module} className="relative pt-4 pb-4 px-2">
               <div
-                className={`flex justify-between items-center bg-green-500 text-white text-center font-bold p-2
-                ${minimized[module] ? "rounded-lg" : "rounded-t-lg"}`}
+                className={`flex justify-between items-center bg-green-500 shadow-md  text-white text-center font-bold p-2
+                ${allMinimized ? "rounded-lg" : "rounded-t-lg"}`}
               >
                 <span>
                   <MinusCircleIcon
@@ -156,19 +146,15 @@ const Carousel: React.FC = () => {
                 </span>
                 <span>{module}</span>
                 <button
-                  onClick={() => handleMinimize(module)}
+                  onClick={handleMinimize} // ✅ Ahora afecta a todos los módulos
                   className="cursor-pointer focus:outline-none p-1"
-                  aria-label={`Toggle ${module}`}
+                  aria-label="Toggle all modules"
                 >
-                  {minimized[module] ? (
-                    <ChevronDown size={24} />
-                  ) : (
-                    <ChevronUp size={24} />
-                  )}
+                  {allMinimized ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
                 </button>
               </div>
 
-              {!minimized[module] && (
+              {!allMinimized && (
                 <div className="rounded-b-lg border border-green-500">
                   {renderModule(module)}
                 </div>
