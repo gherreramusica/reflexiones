@@ -43,15 +43,15 @@ const Carousel: React.FC = () => {
 
   useEffect(() => {
     const fetchModules = async () => {
-      if (!user?.id) return; // No ejecutar si no hay usuario
-
+      if (!user?.id) return;
+  
       try {
         setLoading(true);
         const response = await fetch(`/api/user/modules?userId=${user.id}`);
         const data = await response.json();
-        console.log("📌 Respuesta de la API:", data);
+        
         if (response.ok && Array.isArray(data.modules)) {
-          data.modules.forEach((module: string) => addModule(module)); // ✅ Updates global state
+          data.modules.forEach((module) => addModule(module)); // ✅ Usa la función de contexto
           const minimizedState = (data.modules || []).reduce(
             (acc: { [key: string]: boolean }, module: string) => {
               acc[module] = true;
@@ -69,9 +69,10 @@ const Carousel: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     fetchModules();
-  }, [user]); // ✅ Removed `modules` dependency to prevent infinite calls
+  }, [user, addModule]); // ✅ Ahora `addModule` está en las dependencias
+   // ✅ Removed `modules` dependency to prevent infinite calls
 
   const handleMinimize = (module: string) => {
     setMinimized((prev) => ({

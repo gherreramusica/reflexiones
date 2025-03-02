@@ -7,7 +7,7 @@ interface UpdateUserData {
   username: string;
   bio?: string;
   avatar?: string;
-  modules?: any; // Ideally, specify a more precise type for `modules`
+  modules?: string; // Ideally, specify a more precise type for `modules`
 }
 
 export async function PATCH(req: NextRequest) {
