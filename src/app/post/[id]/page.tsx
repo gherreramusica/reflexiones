@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Post {
+  _id: any;
   id: string;
   title: string;
   extract?: string;
