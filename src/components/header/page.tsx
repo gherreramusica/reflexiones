@@ -213,7 +213,7 @@ export default function Header({setIsMenuOpen}: {isMenuOpen: boolean, setIsMenuO
             )}
 
             {/* 📜 Versículos */}
-            <div className="mt-4 text-sm text-left font-normal text-gray-900">
+            <div className="mt-4 text-lg text-left font-normal text-gray-900">
               {capitulo?.vers?.map((versiculo, index) => (
                 <span className="text-sm text-gray-800 leading-relaxed" key={versiculo.number}>
                   <strong className="text-xs font-normal text-black align-top">

@@ -140,8 +140,8 @@ export default function Versiculos() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center px-5 w-full">
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-md w-full text-center">
+    <div className="flex flex-col items-center justify-center w-full">
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 w-full text-center">
         <h2 className="text-2xl font-semibold mb-3">📖 Versículo del Día</h2>
         <p className="italic text-lg">"{verse}"</p>
 
