@@ -2,27 +2,35 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
+interface UpdateUserData {
+  name: string;
+  username: string;
+  bio?: string;
+  avatar?: string;
+  modules?: any; // Ideally, specify a more precise type for `modules`
+}
+
 export async function PATCH(req: NextRequest) {
   try {
     await connectDB();
     const url = new URL(req.url);
-    const userId = url.pathname.split('/').pop(); // Obtiene el ID del usuario desde la URL
+    const userId = url.pathname.split('/').pop();
 
-    const { name, username, bio, avatar, modules } = await req.json(); // ✅ Ahora también recibimos `modules`
+    const { name, username, bio, avatar, modules }: UpdateUserData = await req.json();
 
     if (!userId) {
       return NextResponse.json({ error: "ID de usuario requerido" }, { status: 400 });
     }
 
-    // Validar los datos recibidos
     if (!name || !username) {
       return NextResponse.json({ error: "Nombre y usuario son requeridos" }, { status: 400 });
     }
 
-    // ✅ Actualizar módulos si existen en la solicitud
-    const updateData: any = { name, username, bio, avatar };
+    // Explicitly typing updateData
+    const updateData: Partial<UpdateUserData> = { name, username, bio, avatar };
+
     if (modules) {
-      updateData.modules = modules; // Solo actualiza `modules` si está presente
+      updateData.modules = modules;
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -41,3 +49,4 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Error al actualizar usuario" }, { status: 500 });
   }
 }
+
