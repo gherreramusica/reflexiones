@@ -82,3 +82,43 @@ export async function POST(req: NextRequest) {
       }
     }
   }  
+
+export async function DELETE(req: NextRequest) {
+    try {
+      await connectDB();
+      const { userId, module } = await req.json();
+  
+      console.log("📌 Eliminando módulo:", module, "para el usuario:", userId);
+  
+      if (!userId || !module) {
+        return NextResponse.json({ message: "User ID and module are required" }, { status: 400 });
+      }
+  
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
+      }
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
+      }
+  
+      // Eliminar el módulo de la lista
+      user.modules = user.modules.filter((mod: string) => mod !== module);
+      await user.markModified("modules");
+      await user.save();
+  
+      console.log("✅ Módulo eliminado, módulos actuales:", user.modules);
+  
+      return NextResponse.json({ message: "Module removed successfully", modules: user.modules }, { status: 200 });
+  
+    } catch (error: unknown) {
+      console.error("❌ Error al eliminar módulo:", error);
+      if (error instanceof Error) {
+        return NextResponse.json({ message: "Error al eliminar módulo", error: error.message }, { status: 500 });
+      } else {
+        return NextResponse.json({ message: "Error al eliminar módulo", error: "An unknown error occurred" }, { status: 500 });
+      }
+    }
+  }  

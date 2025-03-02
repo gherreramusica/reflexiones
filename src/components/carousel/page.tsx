@@ -14,6 +14,7 @@ import {
   ChevronUp,
   ChevronLeft,
   ChevronRight,
+  MinusCircleIcon,
 } from "lucide-react";
 
 interface ArrowProps {
@@ -23,13 +24,21 @@ interface ArrowProps {
 }
 
 const NextArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div className={`${className} custom-next-arrow`} style={{ ...style }} onClick={onClick}>
+  <div
+    className={`${className} custom-next-arrow`}
+    style={{ ...style }}
+    onClick={onClick}
+  >
     <ChevronRight size={24} />
   </div>
 );
 
 const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div className={`${className} custom-prev-arrow`} style={{ ...style }} onClick={onClick}>
+  <div
+    className={`${className} custom-prev-arrow`}
+    style={{ ...style }}
+    onClick={onClick}
+  >
     <ChevronLeft size={24} />
   </div>
 );
@@ -47,19 +56,25 @@ const Carousel: React.FC = () => {
       try {
         const response = await fetch(`/api/user/modules?userId=${user.id}`);
         const data = await response.json();
-console.log("Respuesta de la API:", data);
+        console.log("Respuesta de la API:", data);
         if (response.ok && Array.isArray(data.modules)) {
           setModules(data.modules);
 
           // ✅ Verificar si `data.modules` existe y es un array antes de usar `reduce`
-          const minimizedState = (data.modules || []).reduce((acc: { [key: string]: boolean }, module: string) => {
-            acc[module] = true;
-            return acc;
-          }, {});
+          const minimizedState = (data.modules || []).reduce(
+            (acc: { [key: string]: boolean }, module: string) => {
+              acc[module] = true;
+              return acc;
+            },
+            {}
+          );
 
           setMinimized(minimizedState);
         } else {
-          console.error("❌ Error en la respuesta:", data.message || "Formato inesperado");
+          console.error(
+            "❌ Error en la respuesta:",
+            data.message || "Formato inesperado"
+          );
         }
       } catch (error) {
         console.error("❌ Error obteniendo módulos:", error);
@@ -106,6 +121,32 @@ console.log("Respuesta de la API:", data);
     ],
   };
 
+  const handleRemoveModule = async (moduleName: string) => {
+    if (!user?.id) {
+      console.error("❌ No hay usuario autenticado.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/user/modules", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, module: moduleName }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("✅ Módulo eliminado:", data);
+        setModules((prev) => prev.filter((mod) => mod !== moduleName)); // ✅ Actualiza la UI
+      } else {
+        console.error("❌ Error al eliminar módulo:", data.message);
+      }
+    } catch (error) {
+      console.error("❌ Error en la petición:", error);
+    }
+  };
+
   return (
     <div className="w-full m-auto">
       {loading ? (
@@ -118,18 +159,31 @@ console.log("Respuesta de la API:", data);
                 className={`flex justify-between items-center bg-green-500 text-white text-center font-bold p-2
                 ${minimized[module] ? "rounded-lg" : "rounded-t-lg"}`}
               >
+                <span>
+                  <MinusCircleIcon
+                    className="cursor-pointer text-white"
+                    size={24}
+                    onClick={() => handleRemoveModule(module)}
+                  />
+                </span>
                 <span>{module}</span>
                 <button
                   onClick={() => handleMinimize(module)}
                   className="cursor-pointer focus:outline-none p-1"
                   aria-label={`Toggle ${module}`}
                 >
-                  {minimized[module] ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
+                  {minimized[module] ? (
+                    <ChevronDown size={24} />
+                  ) : (
+                    <ChevronUp size={24} />
+                  )}
                 </button>
               </div>
 
               {!minimized[module] && (
-                <div className="rounded-b-lg border border-green-500">{renderModule(module)}</div>
+                <div className="rounded-b-lg border border-green-500">
+                  {renderModule(module)}
+                </div>
               )}
             </div>
           ))}
