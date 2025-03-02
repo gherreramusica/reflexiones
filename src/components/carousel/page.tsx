@@ -74,7 +74,7 @@ const Carousel: React.FC = () => {
         return <Versiculos />;
       case "Calculadora":
         return <Calculadora />;
-        case "tasks": 
+        case "Tareas": 
         return <Tasks/>;
       default:
         return null;
