@@ -20,7 +20,7 @@ interface Versiculo {
   id: number; // ID único
 }
 
-export default function Header({isMenuOpen, setIsMenuOpen}: {isMenuOpen: boolean, setIsMenuOpen: (isOpen: boolean) => void}) {
+export default function Header({setIsMenuOpen}: {isMenuOpen: boolean, setIsMenuOpen: (isOpen: boolean) => void}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const { user, logout, isAuthenticated } = useAuth();
