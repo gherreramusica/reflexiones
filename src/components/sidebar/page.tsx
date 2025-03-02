@@ -52,7 +52,7 @@ const Sidebar: React.FC<{
           </div>
           <div>
             <button
-              onClick={() => addModule("tasks")}
+              onClick={() => addModule("Tareas")}
               className="mb-2 text-gray-500 text-sm rounded-md"
             >
              Tareas +
