@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Calculadora from "../Calculadora/page";
 import Tasks from "../tasks/page";
 import { useAuth } from "@/hooks/useAuth";
-
+import { useModules } from "@/context/modulesContext"; // ✅ Use global state
 import {
   ChevronDown,
   ChevronUp,
@@ -24,28 +24,20 @@ interface ArrowProps {
 }
 
 const NextArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div
-    className={`${className} custom-next-arrow`}
-    style={{ ...style }}
-    onClick={onClick}
-  >
+  <div className={`${className} custom-next-arrow`} style={{ ...style }} onClick={onClick}>
     <ChevronRight size={24} />
   </div>
 );
 
 const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div
-    className={`${className} custom-prev-arrow`}
-    style={{ ...style }}
-    onClick={onClick}
-  >
+  <div className={`${className} custom-prev-arrow`} style={{ ...style }} onClick={onClick}>
     <ChevronLeft size={24} />
   </div>
 );
 
 const Carousel: React.FC = () => {
   const { user } = useAuth();
-  const [modules, setModules] = useState<string[]>([]);
+  const { modules, addModule, removeModule } = useModules(); // ✅ Use global state
   const [loading, setLoading] = useState(true);
   const [minimized, setMinimized] = useState<{ [key: string]: boolean }>({});
 
@@ -54,13 +46,12 @@ const Carousel: React.FC = () => {
       if (!user?.id) return; // No ejecutar si no hay usuario
 
       try {
+        setLoading(true);
         const response = await fetch(`/api/user/modules?userId=${user.id}`);
         const data = await response.json();
-        console.log("Respuesta de la API:", data);
+        console.log("📌 Respuesta de la API:", data);
         if (response.ok && Array.isArray(data.modules)) {
-          setModules(data.modules);
-
-          // ✅ Verificar si `data.modules` existe y es un array antes de usar `reduce`
+          data.modules.forEach((module: string) => addModule(module)); // ✅ Updates global state
           const minimizedState = (data.modules || []).reduce(
             (acc: { [key: string]: boolean }, module: string) => {
               acc[module] = true;
@@ -68,13 +59,9 @@ const Carousel: React.FC = () => {
             },
             {}
           );
-
           setMinimized(minimizedState);
         } else {
-          console.error(
-            "❌ Error en la respuesta:",
-            data.message || "Formato inesperado"
-          );
+          console.error("❌ Error en la respuesta:", data.message || "Formato inesperado");
         }
       } catch (error) {
         console.error("❌ Error obteniendo módulos:", error);
@@ -84,7 +71,7 @@ const Carousel: React.FC = () => {
     };
 
     fetchModules();
-  }, [user]);
+  }, [user]); // ✅ Removed `modules` dependency to prevent infinite calls
 
   const handleMinimize = (module: string) => {
     setMinimized((prev) => ({
@@ -138,7 +125,7 @@ const Carousel: React.FC = () => {
 
       if (response.ok) {
         console.log("✅ Módulo eliminado:", data);
-        setModules((prev) => prev.filter((mod) => mod !== moduleName)); // ✅ Actualiza la UI
+        removeModule(moduleName); // ✅ Updates global state
       } else {
         console.error("❌ Error al eliminar módulo:", data.message);
       }

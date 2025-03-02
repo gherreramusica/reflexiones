@@ -1,7 +1,6 @@
-'use client'
+'use client';
 
-// context/ModulesContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface ModulesContextType {
   modules: string[];
@@ -12,14 +11,34 @@ interface ModulesContextType {
 const ModulesContext = createContext<ModulesContextType | undefined>(undefined);
 
 export const ModulesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [modules, setModules] = useState<string[]>(['Versiculos']);
+  const [modules, setModules] = useState<string[]>([]);
+
+  // ✅ Load from localStorage on mount
+  useEffect(() => {
+    const savedModules = localStorage.getItem('modules');
+    if (savedModules) {
+      setModules(JSON.parse(savedModules));
+    } else {
+      setModules(['Versiculos']); // Default modules
+    }
+  }, []);
+
+  // ✅ Save to localStorage on state change
+  useEffect(() => {
+    localStorage.setItem('modules', JSON.stringify(modules));
+  }, [modules]);
 
   const addModule = (moduleName: string) => {
-    setModules([...modules, moduleName]);
+    setModules((prev) => {
+      if (!prev.includes(moduleName)) {
+        return [...prev, moduleName];
+      }
+      return prev; // Avoid duplicates
+    });
   };
 
   const removeModule = (moduleName: string) => {
-    setModules(modules.filter(module => module !== moduleName));
+    setModules((prev) => prev.filter((module) => module !== moduleName));
   };
 
   return (
