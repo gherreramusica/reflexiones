@@ -52,10 +52,10 @@ const Sidebar: React.FC<{
           </div>
           <div>
             <button
-              onClick={() => addModule("Bible")}
+              onClick={() => addModule("tasks")}
               className="mb-2 text-gray-500 text-sm rounded-md"
             >
-              Bible +
+             Tareas +
             </button>
           </div>
           <div>

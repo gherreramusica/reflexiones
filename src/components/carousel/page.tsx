@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useModules } from "@/context/modulesContext";
 import Calculadora from "../Calculadora/page";
+
 import {
   ChevronDown,
   ChevronUp,
@@ -14,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Tasks from "../tasks/page";
 
 interface ArrowProps {
   className?: string;
@@ -72,6 +74,8 @@ const Carousel: React.FC = () => {
         return <Versiculos />;
       case "Calculadora":
         return <Calculadora />;
+        case "tasks": 
+        return <Tasks/>;
       default:
         return null;
     }
