@@ -51,7 +51,7 @@ const Carousel: React.FC = () => {
         const data = await response.json();
         
         if (response.ok && Array.isArray(data.modules)) {
-          data.modules.forEach((module) => addModule(module)); // ✅ Usa la función de contexto
+          data.modules.forEach((module:string) => addModule(module)); // ✅ Usa la función de contexto
           const minimizedState = (data.modules || []).reduce(
             (acc: { [key: string]: boolean }, module: string) => {
               acc[module] = true;
