@@ -85,7 +85,7 @@ export default function Tasks() {
     <div className="w-[90%] m-auto">
       {/* Input para agregar tareas */}
       <input
-        className="border mt-5 w-full h-[50px] outline-none rounded-lg p-2 text-gray-500"
+        className="border mt-5 w-full outline-none rounded-lg p-2 text-gray-500"
         type="text"
         placeholder="Escribe aquí..."
         value={taskInput}

@@ -260,7 +260,7 @@ export default function Home() {
           } z-[20]`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex gap-3 space-x-1 h-[100%] min-w-[330px]">
+          <div className="flex gap-3 space-x-1 h-[300px] min-w-[330px]">
             <div className="rounded-full overflow-hidden w-[40px] h-[40px]">
               <Image
                 width={40}
@@ -273,7 +273,7 @@ export default function Home() {
             <div className="w-full">
               <p>Martin Herrera</p>
               <textarea
-                className="w-full outline-none resize-none overflow-auto break-words"
+                className="w-full outline-none h-[250px] resize-none overflow-auto break-words"
                 placeholder="Escribe aquí..."
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
@@ -295,7 +295,7 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="mt-5">
+        <div className="mt-5 sm:block hidden">
           <div
             className="bg-white flex items-center gap-4 text-gray-500 p-3 shadow-md border cursor-pointer min-w-[330px] rounded-md"
             onClick={() => showInput(true)}
@@ -311,7 +311,9 @@ export default function Home() {
             </div>
             <p>Escribe algo...</p>
           </div>
+          
         </div>
+        <div onClick={() => showInput(true)} className="p-4 sm:hidden  cursor-pointer fixed bottom-10 right-10 font-bold bg-gray-900 text-white rounded-lg">+</div>
         {loadingPosts ? (
           <div className="flex justify-center items-center p-e mt-10">
             <AiOutlineLoading3Quarters className="animate-spin text-xl" />

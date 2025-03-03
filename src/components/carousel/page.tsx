@@ -12,8 +12,6 @@ import { useModules } from "@/context/modulesContext"; // ✅ Use global state
 import {
   ChevronDown,
   ChevronUp,
-  ChevronLeft,
-  ChevronRight,
   MinusCircleIcon,
 } from "lucide-react";
 
@@ -23,17 +21,6 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
-const NextArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div className={`${className} custom-next-arrow`} style={{ ...style }} onClick={onClick}>
-    <ChevronRight size={24} />
-  </div>
-);
-
-const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => (
-  <div className={`${className} custom-prev-arrow`} style={{ ...style }} onClick={onClick}>
-    <ChevronLeft size={24} />
-  </div>
-);
 
 const Carousel: React.FC = () => {
   const { user } = useAuth();
@@ -84,18 +71,12 @@ const Carousel: React.FC = () => {
   };
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      { breakpoint: 768, settings: { slidesToShow: 1, slidesToScroll: 1 } },
-      { breakpoint: 1024, settings: { slidesToShow: 2, slidesToScroll: 1 } },
-      { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 1 } },
-    ],
+    adaptiveHeight: true,
   };
 
   const handleRemoveModule = async (moduleName: string) => {
@@ -125,16 +106,16 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className="w-full m-auto">
+    <div className="w-full max-w-[500px] m-auto mb-4">
       {loading && modules.length > 0 ? (
               <div className="flex justify-center mt-3 items-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
               </div>      ) : modules.length === 0 ? null : (
         <Slider {...settings}>
           {modules.map((module) => (
-            <div key={module} className="relative pt-4 pb-4 px-2">
+            <div key={module} className="relative pt-4 pb-2">
               <div
-                className={`flex justify-between items-center bg-green-500 shadow-md  text-white text-center font-bold p-2
+                className={`flex h-[100%] justify-between items-center bg-gray-800 shadow-md  text-gray-200 text-center font-bold p-2
                 ${allMinimized ? "rounded-lg" : "rounded-t-lg"}`}
               >
                 <span>
