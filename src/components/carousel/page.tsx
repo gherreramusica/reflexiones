@@ -15,11 +15,6 @@ import {
   MinusCircleIcon,
 } from "lucide-react";
 
-interface ArrowProps {
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: () => void;
-}
 
 
 const Carousel: React.FC = () => {

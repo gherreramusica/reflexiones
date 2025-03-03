@@ -23,6 +23,7 @@ export default function Calculadora() {
       const result = eval(input);
       setInput(result.toString());
     } catch (error) {
+      console.error("Error al calcular:", error);
       setInput("Error");
     }
   };

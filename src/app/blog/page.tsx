@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { HandThumbUpIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { formatDistanceToNowStrict } from "date-fns";
